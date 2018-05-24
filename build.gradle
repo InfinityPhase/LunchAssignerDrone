@@ -1,0 +1,46 @@
+apply plugin:'java'
+apply plugin:'application'
+apply plugin:'eclipse'
+
+mainClassName = "Main.Assigner"
+
+run {
+    if (project.hasProperty("runArgs")) {
+        args Eval.me(runArgs)
+    }
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+    maven {
+            url  "https://jitpack.io"
+    }
+}
+
+dependencies {
+    compile "com.opencsv:opencsv:4.0"
+}
+
+sourceSets {
+   main {
+      java {
+         srcDirs = ['src']
+      }
+   }
+}
+
+jar {
+    // Needs to be after dependencies
+    manifest {
+            attributes 'Main-Class': 'main.Brain'
+            attributes (
+                    "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
+            )
+    }
+}
+
+task wrapper( type: Wrapper ) {
+    gradleVersion = '4.7'
+}
+
