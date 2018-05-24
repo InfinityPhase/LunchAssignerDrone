@@ -32,5 +32,5 @@ bin/
 gen/
 
 # Other files
-*.csv
-*.ods
+*.csv*
+*.ods*
