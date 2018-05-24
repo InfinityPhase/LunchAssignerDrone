@@ -12,6 +12,7 @@ import com.opencsv.CSVWriter;
 
 import Main.Constants;
 import Main.Day;
+import Main.Person;
 
 public class AssignmentCSVWriter {
 	private String fileName;
@@ -62,16 +63,16 @@ public class AssignmentCSVWriter {
 			
 			List<String[]> lines = new ArrayList<>();
 			for( Day d : assignments ) {
-				String[] line = new String[7];
+				String[] line = new String[8];
 				line[0] = d.getDate().toString();
 				line[1] = d.getDate().getDayOfWeek().toString();
 				
-				line[2] = d.assignments.get(0).name;
-				line[3] = d.assignments.get(0).name;
-				line[4] = d.assignments.get(0).name;
+				line[2] = getNameOrBlank( d.assignments, 0 );
+				line[3] = getNameOrBlank( d.assignments, 1 );
+				line[4] = getNameOrBlank( d.assignments, 2 );
 
-				line[5] = d.backups.get(0).name;
-				line[6] = d.backups.get(1).name;
+				line[5] = getNameOrBlank( d.backups, 0 );
+				line[6] = getNameOrBlank( d.backups, 1 );
 				
 				line[7] = d.getStatusString();
 
@@ -79,6 +80,7 @@ public class AssignmentCSVWriter {
 			}
 			
 			writer.writeAll( lines );
+			writer.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
@@ -92,6 +94,14 @@ public class AssignmentCSVWriter {
 	private List<Day> sortByDate( List<Day> list ) {
 		Collections.sort( list );
 		return list;
+	}
+	
+	private String getNameOrBlank( List<Person> list, int index ) {
+		if( list.size() > index ) {
+			return list.get(index).name;
+		} else {
+			return "";
+		}
 	}
 
 }
