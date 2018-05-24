@@ -117,7 +117,7 @@ public class Assigner {
 				if( p.avalible( d.getDate() ) ) {
 					if( ( 1.0 * p.assignedDays.size() / ( days.size() * Constants.MINIMUM_PEOPLE ) ) <= ratio ) {
 						d.assignments.add( p );
-						p.assignedDays.add( d );
+						p.assignedDays.add( d.getDate() );
 
 						if( currentPerson >= people.size() - 1 ) {
 							currentPerson = 0; // Wrap around, don't go out of index
