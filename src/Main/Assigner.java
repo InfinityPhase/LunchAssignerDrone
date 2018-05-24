@@ -115,31 +115,34 @@ public class Assigner {
 
 		// Assign days in a poor, disorderly fasion
 		double totalReliability = sumReliability( people );
-		for( Day d : days ) {
-			List<Person> tmpAssignment = new ArrayList<>();
-			for( int i = 0; i < people.size(); ++i ) {
-				Person p = people.get(i);
+		for( DayOfWeek dayOfWeek : orderByRatio( ratio ) ) {
+			for( Day d : getDays( days, dayOfWeek ) ) {
+				List<Person> tmpAssignment = new ArrayList<>();
 				
-				// How often this person should be assigned compared to others
-				double scoreRatio = p.getScore(Constants.DATE_TODAY) / totalReliability;
-				// The value of this person for this day
-				double matchValue = 0;
-				
-				if( p.avalible( d.getDate() ) ) {
-					if( ( 1.0 * p.assignedDays.size() / ( days.size() * Constants.MINIMUM_PEOPLE ) ) <= scoreRatio ) {
-						tmpAssignment.add(p);
+				for( int i = 0; i < people.size(); ++i ) {
+					Person p = people.get(i);
+
+					// How often this person should be assigned compared to others
+					double scoreRatio = p.getScore(Constants.DATE_TODAY) / totalReliability;
+					// The value of this person for this day
+					double matchValue = 0;
+
+					if( p.avalible( d.getDate() ) ) {
+						if( ( 1.0 * p.assignedDays.size() / ( days.size() * Constants.MINIMUM_PEOPLE ) ) <= scoreRatio ) {
+							tmpAssignment.add(p);
+						}
 					}
+
+					if( d.assignments.size() >= Constants.MINIMUM_PEOPLE ) {
+						break; // Don't put more than 3 people on each day
+					}
+
 				}
 
-				if( d.assignments.size() >= Constants.MINIMUM_PEOPLE ) {
-					break; // Don't put more than 3 people on each day
+				d.assignments.addAll( tmpAssignment );
+				for( Person p : tmpAssignment ) {
+					p.assignedDays.add( d.getDate() );
 				}
-
-			}
-			
-			d.assignments.addAll( tmpAssignment );
-			for( Person p : tmpAssignment ) {
-				p.assignedDays.add( d.getDate() );
 			}
 		}
 
@@ -147,12 +150,12 @@ public class Assigner {
 		for( Day d : days ) {
 			assignmentWriter.addDay( d );
 		}
-		//assignmentWriter.commitRecords(); // Writes to file
+		assignmentWriter.commitRecords(); // Writes to file
 
-//		printAssignmentsLessThan( days, 2 );
 		printAssignmentRange( people );
+//		printRatio( ratio );
 	}
-	
+
 	/* INFO PRINTERS */
 
 	private static void printAssignments( List<Day> days ) {
@@ -188,18 +191,18 @@ public class Assigner {
 			}
 		}
 	}
-	
+
 	private static void printAssignmentRange( Person p ) {
 		System.out.println("PERSON: " + p.name);
 		List<LocalDate> days = p.assignedDays;
 		Collections.sort( days );
-		
+
 		System.out.println("=> first: " + days.get(0));
 		System.out.println("=> last: " + days.get(days.size()-1));
-//		System.out.println("=> Range: ");
+		//		System.out.println("=> Range: ");
 
 	}
-	
+
 	private static void printAssignmentRange( List<Person> ppl ) {
 		for( Person p : ppl ) {
 			printAssignmentRange(p);
@@ -225,14 +228,14 @@ public class Assigner {
 			}
 		}
 	}
-	
+
 	private static void printPersonAssignmentDates( Person p ) {
 		System.out.println(p.name);
 		for( LocalDate d : p.assignedDays ) {
 			System.out.println("=>" + d.toString());
 		}
 	}
-	
+
 	private static void printAssignmentsofPerson( List<Person> people ) {
 		for( Person p : people ) {
 			printPersonAssignmentDates(p);
@@ -245,9 +248,39 @@ public class Assigner {
 			System.out.println("RATIO: " + ratio.get(day));
 		}
 	}
-	
+
+	private static Day[] getDays( List<Day> days, DayOfWeek dow ) {
+		List<Day> result = new ArrayList<>();
+
+		for( Day d : days ) {
+			if( d.getDayOfWeek().equals( dow ) ) {
+				result.add( d );
+			}
+		}
+
+		return result.toArray( new Day[ result.size() ] );
+	}
+
 	/* UTILITIES */
 	
+	private static DayOfWeek[] orderByRatio( Map<DayOfWeek, Double> ratio ) {
+		List<DayOfWeek> result = new ArrayList<>(7);
+		
+		for( DayOfWeek d : ratio.keySet() ) {
+			int index = 0;
+			for( DayOfWeek dd : result ) {
+				// If the current day to check is after another day
+				if( ratio.get(dd) <= ratio.get(d) ) {
+					++index;
+				}
+			}
+			
+			result.add(index, d);
+		}
+		
+		return result.toArray( new DayOfWeek[ result.size() ] );
+	}
+
 	private static double sumReliability( List<Person> people ) {
 		double result = 0;
 
