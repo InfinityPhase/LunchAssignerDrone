@@ -117,19 +117,22 @@ public class Assigner {
 		double totalReliability = sumReliability( people );
 		for( DayOfWeek dayOfWeek : orderByRatio( ratio ) ) {
 			for( Day d : getDays( days, dayOfWeek ) ) {
-				List<Person> tmpAssignment = new ArrayList<>();
-				
-				for( int i = 0; i < people.size(); ++i ) {
-					Person p = people.get(i);
+				List<Person> possPeople = getPeopleOnDay( people, dayOfWeek );
+				Map<Person, Double> tmpAssignment = new HashMap<>( Constants.MINIMUM_PEOPLE + 1 );
+
+				for( int i = 0; i < possPeople.size(); ++i ) {
+					Person p = possPeople.get(i);
 
 					// How often this person should be assigned compared to others
 					double scoreRatio = p.getScore(Constants.DATE_TODAY) / totalReliability;
 					// The value of this person for this day
 					double matchValue = 0;
 
-					if( p.avalible( d.getDate() ) ) {
-						if( ( 1.0 * p.assignedDays.size() / ( days.size() * Constants.MINIMUM_PEOPLE ) ) <= scoreRatio ) {
-							tmpAssignment.add(p);
+					if( ( 1.0 * p.assignedDays.size() / ( days.size() * Constants.MINIMUM_PEOPLE ) ) <= scoreRatio ) {
+
+						tmpAssignment.put(p, matchValue);
+						if( tmpAssignment.size() >= 4 ) {
+							tmpAssignment = removeLowest( tmpAssignment );
 						}
 					}
 
@@ -139,8 +142,8 @@ public class Assigner {
 
 				}
 
-				d.assignments.addAll( tmpAssignment );
-				for( Person p : tmpAssignment ) {
+				d.assignments.addAll( tmpAssignment.keySet() );
+				for( Person p : tmpAssignment.keySet() ) {
 					p.assignedDays.add( d.getDate() );
 				}
 			}
@@ -153,7 +156,7 @@ public class Assigner {
 		assignmentWriter.commitRecords(); // Writes to file
 
 		printAssignmentRange( people );
-//		printRatio( ratio );
+		//		printRatio( ratio );
 	}
 
 	/* INFO PRINTERS */
@@ -262,10 +265,23 @@ public class Assigner {
 	}
 
 	/* UTILITIES */
-	
+
+	private static Map<Person, Double> removeLowest( Map<Person, Double> map ) {
+		Person lowest = null;
+		for( Person p : map.keySet() ) {
+			if( lowest == null || map.get(p) < map.get(lowest) ) {
+				lowest = p;
+			}
+		}
+
+		map.remove(lowest);
+
+		return map;
+	}
+
 	private static DayOfWeek[] orderByRatio( Map<DayOfWeek, Double> ratio ) {
 		List<DayOfWeek> result = new ArrayList<>(7);
-		
+
 		for( DayOfWeek d : ratio.keySet() ) {
 			int index = 0;
 			for( DayOfWeek dd : result ) {
@@ -274,10 +290,10 @@ public class Assigner {
 					++index;
 				}
 			}
-			
+
 			result.add(index, d);
 		}
-		
+
 		return result.toArray( new DayOfWeek[ result.size() ] );
 	}
 
@@ -305,6 +321,18 @@ public class Assigner {
 		people.removeAll( remove );
 
 		return people;
+	}
+
+	private static List<Person> getPeopleOnDay( List<Person> people, DayOfWeek day ) {
+		List<Person> result = new ArrayList<>();
+
+		for( Person p : people ) {
+			if( p.avalible(day) ) {
+				result.add(p);
+			}
+		}
+
+		return result;
 	}
 
 	private static Map<DayOfWeek, Double> calculateDayOfWeekRatio( List<Person> people ) {
