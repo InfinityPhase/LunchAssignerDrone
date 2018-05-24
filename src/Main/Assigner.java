@@ -114,22 +114,20 @@ public class Assigner {
 		ratio = calculateDayOfWeekRatio( people );
 
 		// Assign days in a poor, disorderly fasion
-		int currentPerson = 0; // Used to try and balance assignments
 		double totalReliability = sumReliability( people );
 		for( Day d : days ) {
+			List<Person> tmpAssignment = new ArrayList<>();
 			for( int i = 0; i < people.size(); ++i ) {
 				Person p = people.get(i);
-				double ratio = p.getScore(Constants.DATE_TODAY) / totalReliability;
+				
+				// How often this person should be assigned compared to others
+				double scoreRatio = p.getScore(Constants.DATE_TODAY) / totalReliability;
+				// The value of this person for this day
+				double matchValue = 0;
+				
 				if( p.avalible( d.getDate() ) ) {
-					if( ( 1.0 * p.assignedDays.size() / ( days.size() * Constants.MINIMUM_PEOPLE ) ) <= ratio ) {
-						d.assignments.add( p );
-						p.assignedDays.add( d.getDate() );
-
-						if( currentPerson >= people.size() - 1 ) {
-							currentPerson = 0; // Wrap around, don't go out of index
-						} else {
-							++currentPerson; // Don't assign this person for a little while
-						}
+					if( ( 1.0 * p.assignedDays.size() / ( days.size() * Constants.MINIMUM_PEOPLE ) ) <= scoreRatio ) {
+						tmpAssignment.add(p);
 					}
 				}
 
@@ -137,6 +135,11 @@ public class Assigner {
 					break; // Don't put more than 3 people on each day
 				}
 
+			}
+			
+			d.assignments.addAll( tmpAssignment );
+			for( Person p : tmpAssignment ) {
+				p.assignedDays.add( d.getDate() );
 			}
 		}
 
