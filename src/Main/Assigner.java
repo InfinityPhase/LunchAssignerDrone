@@ -1,9 +1,12 @@
 package Main;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,24 +84,27 @@ public class Assigner {
 		System.out.println("TOTAL PEOPLE: " + people.size());
 
 		// Load previous data into person storage
-		CSVDay[] prevAssignments = assignmentReader.getAllDayData();
-		for( CSVDay d : prevAssignments ) {
-			Day dd = d.getDay();
-			
-			// Who needs efficency, amirite?
-			for( Person p : dd.assignments ) {
-				if( dd.present.contains( p ) ) {
-					p.present(dd);
-				} else {
-					p.absent(dd);
-				}
-			}
+		File f = new File( Constants.PREV_ASSIGNMENT_CSV);
+		if(  f.exists() ) {
+			CSVDay[] prevAssignments = assignmentReader.getAllDayData();
+			for( CSVDay d : prevAssignments ) {
+				Day dd = d.getDay();
 
-			for( Person p : dd.backups ) {
-				if( dd.present.contains( p ) ) {
-					p.present(dd);
-				} else {
-					p.absent(dd);
+				// Who needs efficency, amirite?
+				for( Person p : dd.assignments ) {
+					if( dd.present.contains( p ) ) {
+						p.present(dd);
+					} else {
+						p.absent(dd);
+					}
+				}
+
+				for( Person p : dd.backups ) {
+					if( dd.present.contains( p ) ) {
+						p.present(dd);
+					} else {
+						p.absent(dd);
+					}
 				}
 			}
 		}
@@ -138,18 +144,13 @@ public class Assigner {
 		for( Day d : days ) {
 			assignmentWriter.addDay( d );
 		}
-		assignmentWriter.commitRecords();
+		//assignmentWriter.commitRecords(); // Writes to file
+
+//		printAssignmentsLessThan( days, 2 );
+		printAssignmentRange( people );
 	}
-
-	private static double sumReliability( List<Person> people ) {
-		double result = 0;
-
-		for( Person p : people ) {
-			result += p.getScore();
-		}
-
-		return result;
-	}
+	
+	/* INFO PRINTERS */
 
 	private static void printAssignments( List<Day> days ) {
 		for( Day d : days ) {
@@ -173,6 +174,35 @@ public class Assigner {
 		}
 	}
 
+	private static void printAssignmentsLessThan( List<Day> days, int assignments ) {
+		for( Day d : days ) {
+			if( d.assignments.size() <= assignments ) {
+				System.out.println("DAY: " + d.getDate().toString() + " (" + d.getDayOfWeek() + ")");
+				System.out.println("==> PEOPLE:");
+				for( Person p : d.assignments ) {
+					System.out.println("====> NAME: " + p.name);
+				}
+			}
+		}
+	}
+	
+	private static void printAssignmentRange( Person p ) {
+		System.out.println("PERSON: " + p.name);
+		List<LocalDate> days = p.assignedDays;
+		Collections.sort( days );
+		
+		System.out.println("=> first: " + days.get(0));
+		System.out.println("=> last: " + days.get(days.size()-1));
+//		System.out.println("=> Range: ");
+
+	}
+	
+	private static void printAssignmentRange( List<Person> ppl ) {
+		for( Person p : ppl ) {
+			printAssignmentRange(p);
+		}
+	}
+
 	private static void printPeople( List<Person> people ) {
 		System.out.println("PEOPLE IN SYSTEM: " + people.size());
 		for( Person p : people ) {
@@ -192,12 +222,37 @@ public class Assigner {
 			}
 		}
 	}
+	
+	private static void printPersonAssignmentDates( Person p ) {
+		System.out.println(p.name);
+		for( LocalDate d : p.assignedDays ) {
+			System.out.println("=>" + d.toString());
+		}
+	}
+	
+	private static void printAssignmentsofPerson( List<Person> people ) {
+		for( Person p : people ) {
+			printPersonAssignmentDates(p);
+		}
+	}
 
 	private static void printRatio( Map<DayOfWeek, Double> ratio ) {
 		for( DayOfWeek day : ratio.keySet() ) {
 			System.out.println("DAY: " + day.toString());
 			System.out.println("RATIO: " + ratio.get(day));
 		}
+	}
+	
+	/* UTILITIES */
+	
+	private static double sumReliability( List<Person> people ) {
+		double result = 0;
+
+		for( Person p : people ) {
+			result += p.getScore();
+		}
+
+		return result;
 	}
 
 	private static List<Person> removeDuplicatePeople( List<Person> people ) {
@@ -316,6 +371,10 @@ public class Assigner {
 				break;
 			case "sunday":
 				result[current] = DayOfWeek.SUNDAY;
+				++current;
+				break;
+			default:
+				result[current] = DayOfWeek.FRIDAY;
 				++current;
 				break;
 			}

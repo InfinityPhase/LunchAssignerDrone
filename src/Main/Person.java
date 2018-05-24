@@ -5,6 +5,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -17,7 +18,7 @@ public class Person {
 	public List<LocalDate> blacklistDate; // Specific dates that don't work
 
 	// Self explanatory, hopefully
-	public List<LocalDate> assignedDays; // Perhaps these should store LocalDate objects instead
+	public List<LocalDate> assignedDays;
 	private List<LocalDate> presentDays;
 	private List<LocalDate> missedDays;
 
@@ -31,7 +32,7 @@ public class Person {
 	private LocalDate prevDateQueired;
 	private int prevCountReturned;
 
-	public Person( String name, DayOfWeek[] avalibleDays, List<LocalDate> presentDays, List<LocalDate> assignedDays, List<LocalDate> missedDays, List<LocalDate> blacklistDate ) {
+	public Person( String name, DayOfWeek[] avalibleDays, List<LocalDate> presentDays, List<LocalDate> assignedDays, List<LocalDate> missedDays, List<LocalDate> blacklistDate, String email, String note, String per3, String per4 ) {
 		this.name = name;
 		this.avalibleDays = avalibleDays;
 		this.presentDays = presentDays;
@@ -39,12 +40,21 @@ public class Person {
 		this.missedDays = missedDays;
 		this.blacklistDate = blacklistDate;
 		
+		this.email = email;
+		this.note = note;
+		this.per3 = per3;
+		this.per4 = per4;
+		
 		this.prevCountReturned = 0;
 		this.prevDateQueired = LocalDate.MIN; // Why not?
 	}
+	
+	public Person( String name, DayOfWeek[] days, String email, String note, String per3, String per4 ) {
+		this( name, days, new ArrayList<LocalDate>(), new ArrayList<LocalDate>(), new ArrayList<LocalDate>(), new ArrayList<LocalDate>(), email, note, per3, per4 );
+	}
 
 	public Person( String name, DayOfWeek[] days ) {
-		this( name, days, new ArrayList<LocalDate>(), new ArrayList<LocalDate>(), new ArrayList<LocalDate>(), new ArrayList<LocalDate>() );
+		this( name, days, "", "", "", "" );
 	}
 
 	public Person( String name ) {
@@ -129,6 +139,12 @@ public class Person {
 		} else {
 			return prevCountReturned;
 		}
+	}
+	
+	public void sortAllAssignments() {
+		Collections.sort( assignedDays );
+		Collections.sort( missedDays );
+		Collections.sort( presentDays );
 	}
 	
 	/* GETTERS */
