@@ -119,7 +119,7 @@ public class Assigner {
 			Day[] daysOfWeek = getDays( days, dayOfWeek );
 			for( Day d : daysOfWeek ) {
 				List<Person> possPeople = getPeopleOnDay( people, dayOfWeek );
-				Map<Person, Double> tmpAssignment = new HashMap<>( Constants.MINIMUM_PEOPLE + 1 );
+				Map<Person, Double> tmpAssignment = new HashMap<>( Constants.ASSIGNMENT_PEOPLE + 1 );
 
 				totalReliability = sumReliability( getPeopleOnDay( possPeople, d.getDayOfWeek() ) );
 
@@ -131,7 +131,7 @@ public class Assigner {
 					// The value of this person for this day
 					double matchValue = 0;
 
-					if( ( 1.0 * p.assignedDays.size() / ( days.size() * Constants.MINIMUM_PEOPLE ) ) <= scoreRatio ) {
+					if( ( 1.0 * p.assignedDays.size() / ( days.size() * Constants.ASSIGNMENT_PEOPLE ) ) <= scoreRatio ) {
 
 						tmpAssignment.put(p, matchValue);
 						if( tmpAssignment.size() >= 4 ) {
@@ -139,7 +139,7 @@ public class Assigner {
 						}
 					}
 
-					if( d.assignments.size() >= Constants.MINIMUM_PEOPLE ) {
+					if( d.assignments.size() >= Constants.ASSIGNMENT_PEOPLE ) {
 						break; // Don't put more than 3 people on each day
 					}
 
@@ -156,9 +156,10 @@ public class Assigner {
 		for( Day d : days ) {
 			assignmentWriter.addDay( d );
 		}
-		assignmentWriter.commitRecords(); // Writes to file
+		//assignmentWriter.commitRecords(); // Writes to file
 
 		printAssignmentRange( people );
+		printPeople( people );
 	}
 
 	/* INFO PRINTERS */
@@ -202,9 +203,9 @@ public class Assigner {
 		List<LocalDate> days = p.assignedDays;
 		Collections.sort( days );
 
-		System.out.println("=> first: " + ( days.size() > 0 ? days.get( days.size()-1 ) : ""));
-		System.out.println("=> last: " + ( days.size() > 0 ? days.get( days.size()-1 ) : "") );
-		//		System.out.println("=> Range: ");
+		//System.out.println("=> first: " + ( days.size() > 0 ? days.get( 0 ) : ""));
+		//System.out.println("=> last: " + ( days.size() > 0 ? days.get( days.size()-1 ) : "") );
+		System.out.println("=> Range: " + ( ( days.size() > 0 ? days.get( days.size()-1 ).toEpochDay() : 0) - ( days.size() > 0 ? days.get( 0 ).toEpochDay() : 0) ) );
 
 	}
 
