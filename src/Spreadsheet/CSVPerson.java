@@ -29,6 +29,9 @@ public class CSVPerson {
 	@CsvBindByName(column = "Notes", required = false)
 	protected String notes;
 	
+	@CsvBindByName(column = "Leadership", required = false)
+	protected String leadership;
+	
 	public String getName() {
 		return firstName + " " + lastName;
 	}
@@ -51,6 +54,10 @@ public class CSVPerson {
 	
 	public DayOfWeek[] getAvalible() {
 		return Assigner.convertDays( avalible );
+	}
+	
+	public String getLeadership() {
+		return leadership;
 	}
 
 }
