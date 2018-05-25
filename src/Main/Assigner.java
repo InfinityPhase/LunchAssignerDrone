@@ -113,25 +113,39 @@ public class Assigner {
 
 		ratio = calculateDayOfWeekRatio( people );
 
-		// Assign days in a poor, disorderly fasion
-		double totalReliability = sumReliability( people );
+		// Assign days in a disorderly fasion
 		for( DayOfWeek dayOfWeek : orderByRatio( ratio ) ) {
 			Day[] daysOfWeek = getDays( days, dayOfWeek );
 			for( Day d : daysOfWeek ) {
 				List<Person> possPeople = getPeopleOnDay( people, dayOfWeek );
+				Map<Person, Double> individualValue = new HashMap<>(); // Collection of person to value assignments for this day of the wek
 				Map<Person, Double> tmpAssignment = new HashMap<>( Constants.ASSIGNMENT_PEOPLE + 1 );
 
-				totalReliability = sumReliability( getPeopleOnDay( possPeople, d.getDayOfWeek() ) );
+				double totalReliability = sumReliability( getPeopleOnDay( possPeople, d.getDayOfWeek() ) );
+				double totalValue = 0.0; // Sum of all the individual values of each person
 
+				// Calculates the value of each person on this day
+				for( int i = 0; i < possPeople.size(); ++i ) {
+					// Put any calculations for individual value here
+					double value = Constants.DEFAULT_VALUE;
+					
+					if( possPeople.get(1).getLeadership() ) {
+						value += Constants.LEADERSHIP_VALUE;
+					}
+					
+					individualValue.put( possPeople.get(i), value );
+				}
+				
+				totalValue = sumValues( individualValue );
+				
 				for( int i = 0; i < possPeople.size(); ++i ) {
 					Person p = possPeople.get(i);
+					Double matchValue = individualValue.get(p);
 
 					// How often this person should be assigned compared to others
 					double scoreRatio = p.getScore(Constants.DATE_TODAY) / totalReliability;
-					// The value of this person for this day
-					double matchValue = 0;
 
-					if( ( 1.0 * p.assignedDays.size() / ( days.size() * Constants.ASSIGNMENT_PEOPLE ) ) <= scoreRatio ) {
+					if( ( ( 1.0 * p.assignedDays.size() ) + matchValue / ( ( days.size() * Constants.ASSIGNMENT_PEOPLE ) + totalValue ) ) <= scoreRatio ) {
 
 						tmpAssignment.put(p, matchValue);
 						if( tmpAssignment.size() >= 4 ) {
@@ -307,6 +321,16 @@ public class Assigner {
 			result += p.getScore();
 		}
 
+		return result;
+	}
+	
+	private static double sumValues( Map<Person, Double> people ) {
+		double result = 0;
+		
+		for( Double d: people.values() ) {
+			result += d;
+		}
+		
 		return result;
 	}
 

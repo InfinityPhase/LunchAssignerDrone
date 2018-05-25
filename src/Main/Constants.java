@@ -12,6 +12,10 @@ public final class Constants {
 	public static final String PREV_ASSIGNMENT_CSV = "Old_Assignments.csv";
 	public static final int ASSIGNMENT_PEOPLE = 3;
 	public static final int BACKUP_PEOPLE = 2;
+	
+	// Value constants
+	public static final Double DEFAULT_VALUE = 1.0;
+	public static final Double LEADERSHIP_VALUE = 0.5;
 
 	// YEAR, MONTH, DAY
 	public static final LocalDate DATE_START = LocalDate.of( 2018, Month.OCTOBER, 1 );

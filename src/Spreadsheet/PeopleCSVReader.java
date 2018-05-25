@@ -23,6 +23,7 @@ public class PeopleCSVReader {
 	private int per4Index;
 	private int avalibleIndex;
 	private int noteIndex;
+	private int leadershipIndex;
 
 
 	public PeopleCSVReader( String fileName ) {
@@ -51,6 +52,7 @@ public class PeopleCSVReader {
 				String per4 = "";
 				String avalible = "";
 				String note = "";
+				String leadership = "";
 
 				if( first ) {
 					first = false;
@@ -74,10 +76,12 @@ public class PeopleCSVReader {
 						note = s;
 					} else if( i == avalibleIndex ) {
 						avalible = s; // TODO MAKE WORK
+					} else if( i == leadershipIndex ) {
+						leadership = s;
 					}
 				}
 
-				people.add( new Person( nameFirst + " " + nameLast, Assigner.convertDays( avalible ) ) );
+				people.add( new Person( nameFirst + " " + nameLast, Assigner.convertDays( avalible ), email, note, per3, per4, isLeadership(leadership) ) );
 
 			}
 		} catch (FileNotFoundException e) {
@@ -110,6 +114,8 @@ public class PeopleCSVReader {
 					avalibleIndex = i;
 				} else if( s.toLowerCase().contains("notes") ) {
 					noteIndex = i;
+				} else if( s.toLowerCase().contains("leadership") ) {
+					leadershipIndex = i;
 				}
 			}
 
@@ -120,6 +126,14 @@ public class PeopleCSVReader {
 		}
 
 		return true;
+	}
+	
+	private boolean isLeadership( String line ) {
+		if( line.equalsIgnoreCase( "y" ) || line.equalsIgnoreCase( "yes" ) || line.equalsIgnoreCase( "leadership" ) ) {
+			return true;
+		}
+		
+		return false;
 	}
 
 }

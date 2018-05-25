@@ -27,12 +27,13 @@ public class Person {
 	private String note;
 	private String per3;
 	private String per4;
+	private boolean leadership;
 
 	// For optimizations
 	private LocalDate prevDateQueired;
 	private int prevCountReturned;
 
-	public Person( String name, DayOfWeek[] avalibleDays, List<LocalDate> presentDays, List<LocalDate> assignedDays, List<LocalDate> missedDays, List<LocalDate> blacklistDate, String email, String note, String per3, String per4 ) {
+	public Person( String name, DayOfWeek[] avalibleDays, List<LocalDate> presentDays, List<LocalDate> assignedDays, List<LocalDate> missedDays, List<LocalDate> blacklistDate, String email, String note, String per3, String per4, boolean leadership ) {
 		this.name = name;
 		this.avalibleDays = avalibleDays;
 		this.presentDays = presentDays;
@@ -44,13 +45,18 @@ public class Person {
 		this.note = note;
 		this.per3 = per3;
 		this.per4 = per4;
+		this.leadership = leadership;
 		
 		this.prevCountReturned = 0;
 		this.prevDateQueired = LocalDate.MIN; // Why not?
 	}
 	
+	public Person( String name, DayOfWeek[] days, String email, String note, String per3, String per4, boolean leadership ) {
+		this( name, days, new ArrayList<LocalDate>(), new ArrayList<LocalDate>(), new ArrayList<LocalDate>(), new ArrayList<LocalDate>(), email, note, per3, per4, leadership );
+	}
+	
 	public Person( String name, DayOfWeek[] days, String email, String note, String per3, String per4 ) {
-		this( name, days, new ArrayList<LocalDate>(), new ArrayList<LocalDate>(), new ArrayList<LocalDate>(), new ArrayList<LocalDate>(), email, note, per3, per4 );
+		this( name, days, email, note, per3, per4, false );
 	}
 
 	public Person( String name, DayOfWeek[] days ) {
@@ -171,6 +177,10 @@ public class Person {
 
 	public String getPer4() {
 		return per4;
+	}
+	
+	public boolean getLeadership() {
+		return leadership;
 	}
 	
 	/* OBJECT UTILS */
