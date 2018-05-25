@@ -120,7 +120,7 @@ public class Assigner {
 			for( Day d : daysOfWeek ) {
 				List<Person> possPeople = getPeopleOnDay( people, dayOfWeek );
 				Map<Person, Double> tmpAssignment = new HashMap<>( Constants.MINIMUM_PEOPLE + 1 );
-				
+
 				totalReliability = sumReliability( getPeopleOnDay( possPeople, d.getDayOfWeek() ) );
 
 				for( int i = 0; i < possPeople.size(); ++i ) {
@@ -159,7 +159,6 @@ public class Assigner {
 		assignmentWriter.commitRecords(); // Writes to file
 
 		printAssignmentRange( people );
-		//		printRatio( ratio );
 	}
 
 	/* INFO PRINTERS */
@@ -203,8 +202,8 @@ public class Assigner {
 		List<LocalDate> days = p.assignedDays;
 		Collections.sort( days );
 
-		System.out.println("=> first: " + days.get(0));
-		System.out.println("=> last: " + days.get(days.size()-1));
+		System.out.println("=> first: " + ( days.size() > 0 ? days.get( days.size()-1 ) : ""));
+		System.out.println("=> last: " + ( days.size() > 0 ? days.get( days.size()-1 ) : "") );
 		//		System.out.println("=> Range: ");
 
 	}
