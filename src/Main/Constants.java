@@ -10,7 +10,8 @@ public final class Constants {
 	public static final String DEFAULT_CSV_NAME = "NAMEHERE";
 	public static final String ASSIGNMENT_CSV = "Assignments.csv";
 	public static final String PREV_ASSIGNMENT_CSV = "Old_Assignments.csv";
-	public static final int MINIMUM_PEOPLE = 3;
+	public static final int ASSIGNMENT_PEOPLE = 3;
+	public static final int BACKUP_PEOPLE = 2;
 
 	// YEAR, MONTH, DAY
 	public static final LocalDate DATE_START = LocalDate.of( 2018, Month.OCTOBER, 1 );
@@ -20,6 +21,7 @@ public final class Constants {
 	// Blacklist of days for rotations
 	public static final DayOfWeek[] DAY_NO_ROTATIONS = { DayOfWeek.SATURDAY, DayOfWeek.SUNDAY, DayOfWeek.MONDAY };
 	public static final LocalDate[] DATE_NO_ROTATIONS = {}; // Not implemented
+	public static final LocalDate[][] RANGE_NO_ROTATIONS = {}; // Not implemented
 	
 	public static final String[] DEFAULT_ASSIGNMENT_HEADER = { "Date", "Day Of Week", "Person A", "Person B", "Person C", "Backup A", "Backup B", "Status" };
 
