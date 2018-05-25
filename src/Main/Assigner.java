@@ -116,9 +116,12 @@ public class Assigner {
 		// Assign days in a poor, disorderly fasion
 		double totalReliability = sumReliability( people );
 		for( DayOfWeek dayOfWeek : orderByRatio( ratio ) ) {
-			for( Day d : getDays( days, dayOfWeek ) ) {
+			Day[] daysOfWeek = getDays( days, dayOfWeek );
+			for( Day d : daysOfWeek ) {
 				List<Person> possPeople = getPeopleOnDay( people, dayOfWeek );
 				Map<Person, Double> tmpAssignment = new HashMap<>( Constants.MINIMUM_PEOPLE + 1 );
+				
+				totalReliability = sumReliability( getPeopleOnDay( possPeople, d.getDayOfWeek() ) );
 
 				for( int i = 0; i < possPeople.size(); ++i ) {
 					Person p = possPeople.get(i);
