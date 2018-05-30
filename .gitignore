@@ -34,4 +34,6 @@ gen/
 # Other files
 *.csv*
 *.ods*
-*.key
+
+# Any credentials
+credentials/
