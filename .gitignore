@@ -34,3 +34,4 @@ gen/
 # Other files
 *.csv*
 *.ods*
+*.key
