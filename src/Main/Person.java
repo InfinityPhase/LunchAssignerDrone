@@ -194,7 +194,7 @@ public class Person {
 	public int hashCode() {		
 		return new HashCodeBuilder(17, 37).append(name).append(assignedDays).append(blacklistDate)
 				.append(avalibleDays).append(missedDays).append(presentDays).append(note)
-				.append(per3).append(per4).toHashCode();
+				.append(per3).append(per4).append(leadership).toHashCode();
 	}
 
 	@Override
@@ -211,7 +211,7 @@ public class Person {
 				.append(blacklistDate, p.blacklistDate).append(assignedDays, p.assignedDays)
 				.append(presentDays, p.getPresentDays()).append(missedDays, p.getMissedDays())
 				.append(email, p.getEmail()).append(note, p.getNote()).append(per3, p.getPer3())
-				.append(per4, p.getPer4()).isEquals();
+				.append(per4, p.getPer4()).append(leadership, p.getLeadership()).isEquals();
 	}
 
 }

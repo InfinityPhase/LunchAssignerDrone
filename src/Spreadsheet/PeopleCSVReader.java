@@ -13,7 +13,6 @@ import Main.Assigner;
 import Main.Person;
 
 public class PeopleCSVReader {
-	// TODO Use @CSVBindByName() annotation to do all this shit
 	private String fileName;
 
 	private int firstNameIndex;
@@ -36,7 +35,6 @@ public class PeopleCSVReader {
 		this( file.getAbsolutePath() );
 	}
 
-	@SuppressWarnings("unused")
 	public Person[] getPeople() {
 		List<Person> people = new ArrayList<>();
 
@@ -75,7 +73,7 @@ public class PeopleCSVReader {
 					} else if( i == noteIndex ) {
 						note = s;
 					} else if( i == avalibleIndex ) {
-						avalible = s; // TODO MAKE WORK
+						avalible = s;
 					} else if( i == leadershipIndex ) {
 						leadership = s;
 					}
