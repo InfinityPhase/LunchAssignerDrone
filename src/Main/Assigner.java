@@ -126,26 +126,31 @@ public class Assigner {
 
 				// Calculates the value of each person on this day
 				for( int i = 0; i < possPeople.size(); ++i ) {
+					Person p = possPeople.get(i);
+
 					// Put any calculations for individual value here
 					double value = Constants.DEFAULT_VALUE;
 					
-					if( possPeople.get(1).getLeadership() ) {
+					value += ( 1.0 * p.assignedDays.size() );
+					
+					if( p.getLeadership() ) {
 						value += Constants.LEADERSHIP_VALUE;
 					}
 					
-					individualValue.put( possPeople.get(i), value );
+					individualValue.put( p, value );
 				}
 				
 				totalValue = sumValues( individualValue );
+				totalValue += ( days.size() * Constants.ASSIGNMENT_PEOPLE );
 				
 				for( int i = 0; i < possPeople.size(); ++i ) {
 					Person p = possPeople.get(i);
-					Double matchValue = individualValue.get(p);
+					double matchValue = individualValue.get(p);
 
 					// How often this person should be assigned compared to others
 					double scoreRatio = p.getScore(Constants.DATE_TODAY) / totalReliability;
 
-					if( ( ( 1.0 * p.assignedDays.size() ) + matchValue / ( ( days.size() * Constants.ASSIGNMENT_PEOPLE ) + totalValue ) ) <= scoreRatio ) {
+					if( ( matchValue / totalValue ) <= scoreRatio ) {
 
 						tmpAssignment.put(p, matchValue);
 						if( tmpAssignment.size() >= 4 ) {
@@ -171,9 +176,9 @@ public class Assigner {
 			assignmentWriter.addDay( d );
 		}
 		//assignmentWriter.commitRecords(); // Writes to file
-
-		printAssignmentRange( people );
-		printPeople( people );
+//
+//		printAssignmentRange( people );
+//		printPeople( people );
 	}
 
 	/* INFO PRINTERS */
