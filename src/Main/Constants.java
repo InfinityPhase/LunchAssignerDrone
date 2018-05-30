@@ -14,8 +14,8 @@ public final class Constants {
 	public static final int BACKUP_PEOPLE = 2;
 	
 	// Value constants
-	public static final Double DEFAULT_VALUE = 1.0;
-	public static final Double LEADERSHIP_VALUE = 0.5;
+	public static final double DEFAULT_VALUE = 1.0;
+	public static final double LEADERSHIP_VALUE = 0.5;
 
 	// YEAR, MONTH, DAY
 	public static final LocalDate DATE_START = LocalDate.of( 2018, Month.OCTOBER, 1 );
