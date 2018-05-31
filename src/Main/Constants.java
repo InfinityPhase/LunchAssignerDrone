@@ -28,5 +28,7 @@ public final class Constants {
 	public static final LocalDate[][] RANGE_NO_ROTATIONS = {}; // Not implemented
 	
 	public static final String[] DEFAULT_ASSIGNMENT_HEADER = { "Date", "Day Of Week", "Person A", "Person B", "Person C", "Backup A", "Backup B", "Status" };
+	public static final String DEFAULT_KEY = "";
+	public static final String DEFALT_SHEET_NAME = "";
 
 }

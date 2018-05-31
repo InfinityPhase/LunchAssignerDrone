@@ -14,6 +14,7 @@ import java.util.Map;
 import Spreadsheet.AssignmentCSVReader;
 import Spreadsheet.AssignmentCSVWriter;
 import Spreadsheet.CSVDay;
+import Spreadsheet.CSVSheetManager;
 import Spreadsheet.PeopleCSVReader;
 
 @SuppressWarnings("unused")
@@ -40,7 +41,29 @@ public class Assigner {
 	static List<Day> days;
 	static Map<DayOfWeek, Double> ratio;
 
+	public static String csvKey = "";
+	public static String csvName = "";
+	public static boolean downloadPeopleCSV = true;
+
 	public static void main( String[] args ) {
+		if( args.length >= 2 ) {
+			csvName = args[0];
+			csvKey = args[1];
+		} else {
+			// Check if we already have the files
+			if( ( ( Constants.DEFAULT_KEY.isEmpty() || Constants.DEFALT_SHEET_NAME.isEmpty() ) && !( new File(Constants.PEOPLE_CSV).exists() ) ) ){
+				// We don't.
+				System.exit(1);
+			} else {
+				if( new File(Constants.PEOPLE_CSV).exists() ) {
+					downloadPeopleCSV = false; // We can use the old version
+				} else {
+					csvName = Constants.DEFALT_SHEET_NAME;
+					csvKey = Constants.DEFAULT_KEY;
+				}
+			}
+		}
+
 		long dayCount = 0;
 
 		// Init lists
@@ -51,6 +74,18 @@ public class Assigner {
 		PeopleCSVReader peopleData = new PeopleCSVReader( Constants.PEOPLE_CSV );
 		AssignmentCSVWriter assignmentWriter = new AssignmentCSVWriter( Constants.ASSIGNMENT_CSV );
 		AssignmentCSVReader assignmentReader = new AssignmentCSVReader( Constants.PREV_ASSIGNMENT_CSV );
+		
+		/* DOWNLOAD CSV STUFF */
+		
+		CSVSheetManager newAssignmentCSVManager = new CSVSheetManager( csvKey, csvName, Constants.ASSIGNMENT_CSV );
+		
+		CSVSheetManager prevAssignmentCSVManager = new CSVSheetManager( csvKey, csvName, Constants.PREV_ASSIGNMENT_CSV );
+		prevAssignmentCSVManager.download();
+		
+		if( downloadPeopleCSV ) { // Only do so if there is a need to
+			CSVSheetManager peopleCSVManager = new CSVSheetManager( csvKey, csvName, Constants.PEOPLE_CSV );
+			peopleCSVManager.download();
+		}
 
 		/* LOAD DAYS */
 
@@ -130,19 +165,19 @@ public class Assigner {
 
 					// Put any calculations for individual value here
 					double value = Constants.DEFAULT_VALUE;
-					
+
 					value += ( 1.0 * p.assignedDays.size() );
-					
+
 					if( p.getLeadership() ) {
 						value += Constants.LEADERSHIP_VALUE;
 					}
-					
+
 					individualValue.put( p, value );
 				}
-				
+
 				totalValue = sumValues( individualValue );
 				totalValue += ( days.size() * Constants.ASSIGNMENT_PEOPLE );
-				
+
 				for( int i = 0; i < possPeople.size(); ++i ) {
 					Person p = possPeople.get(i);
 					double matchValue = individualValue.get(p);
@@ -175,10 +210,9 @@ public class Assigner {
 		for( Day d : days ) {
 			assignmentWriter.addDay( d );
 		}
-		//assignmentWriter.commitRecords(); // Writes to file
-//
-//		printAssignmentRange( people );
-//		printPeople( people );
+		
+		assignmentWriter.commitRecords(); // Writes to file
+		newAssignmentCSVManager.upload(); // Uploads that file
 	}
 
 	/* INFO PRINTERS */
@@ -328,14 +362,14 @@ public class Assigner {
 
 		return result;
 	}
-	
+
 	private static double sumValues( Map<Person, Double> people ) {
 		double result = 0;
-		
+
 		for( Double d: people.values() ) {
 			result += d;
 		}
-		
+
 		return result;
 	}
 
