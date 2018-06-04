@@ -129,26 +129,28 @@ public class Assigner {
 		System.out.println("TOTAL PEOPLE: " + people.size());
 
 		// Load previous data into person storage
-		File f = new File( Constants.PREV_ASSIGNMENT_CSV);
-		if(  f.exists() ) {
-			CSVDay[] prevAssignments = assignmentReader.getAllDayData();
-			for( CSVDay d : prevAssignments ) {
-				Day dd = d.getDay();
+		for( String s : prevAssignments ) {
+			File f = new File( s );
+			if(  f.exists() ) {
+				CSVDay[] prevAssignments = assignmentReader.getAllDayData();
+				for( CSVDay d : prevAssignments ) {
+					Day dd = d.getDay();
 
-				// Who needs efficency, amirite?
-				for( Person p : dd.assignments ) {
-					if( dd.present.contains( p ) ) {
-						p.present(dd);
-					} else {
-						p.absent(dd);
+					// Who needs efficency, amirite?
+					for( Person p : dd.assignments ) {
+						if( dd.present.contains( p ) ) {
+							p.present(dd);
+						} else {
+							p.absent(dd);
+						}
 					}
-				}
 
-				for( Person p : dd.backups ) {
-					if( dd.present.contains( p ) ) {
-						p.present(dd);
-					} else {
-						p.absent(dd);
+					for( Person p : dd.backups ) {
+						if( dd.present.contains( p ) ) {
+							p.present(dd);
+						} else {
+							p.absent(dd);
+						}
 					}
 				}
 			}
