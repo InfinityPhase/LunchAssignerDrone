@@ -20,6 +20,8 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
 
+import Main.Constants;
+
 public class CSVSheetManager {
 	private static List<String> scopes = Arrays.asList(SheetsScopes.SPREADSHEETS);
 	private static final String DATA_STORE_DIR = "credentials/wellshitthissucks.json";
@@ -29,7 +31,13 @@ public class CSVSheetManager {
 	private static FileDataStoreFactory dataStoreFactory;
 	private Sheets service;
 
-	public CSVSheetManager() {
+	private String sheetID;
+	private String defaultName;
+
+	public CSVSheetManager( String sheetID, String defaultName ) {
+		this.sheetID = sheetID;
+		this.defaultName = defaultName;
+
 		try {
 			transport = GoogleNetHttpTransport.newTrustedTransport();
 			dataStoreFactory = new FileDataStoreFactory( new File(DATA_STORE_DIR) );
@@ -42,10 +50,53 @@ public class CSVSheetManager {
 			e.printStackTrace();
 		}
 	}
+
+	public CSVSheetManager( String sheetID ) {
+		this.sheetID = sheetID;
+		this.defaultName = Constants.DEFAULT_CSV_NAME;
+
+		try {
+			transport = GoogleNetHttpTransport.newTrustedTransport();
+			dataStoreFactory = new FileDataStoreFactory( new File(DATA_STORE_DIR) );
+			jsonFactory = JacksonFactory.getDefaultInstance();
+
+			service = getSheetsService();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/* UPLOAD / DOWNLOAD FILES */
+
+	public boolean upload() {
+		return upload( defaultName );
+	}
+
+	public boolean upload( String localName ) {
+		return upload( localName, localName );
+	}
+
+	public boolean upload( String localName, String remoteName ) {
+
+	}
+
+	public boolean download() {
+		return download( defaultName );
+	}
+
+	public boolean download( String localName ) {
+		return download( localName, localName );
+	}
 	
+	public boolean download( String localName, String remoteName ) {
+		
+	}
+
 	/* GOOGLE AUTH STUFF */
 
-	private Sheets getSheetsService() throws IOException {
+	private Sheets getSheetsService() throws IOException { // TODO Replace with oneliner
 		Credential credential = authorize();
 		return new Sheets.Builder(transport, jsonFactory, credential)
 				.setApplicationName("INSERT_YOUR_APPLICATION_NAME")
