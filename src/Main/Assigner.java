@@ -4,6 +4,7 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,17 +37,23 @@ public class Assigner {
 	 */
 
 	// wget --no-check-certificate --output-document=LunchPeople.csv 'https://docs.google.com/spreadsheet/ccc?key=<KEY_HERE>&output=csv'
+	/* Assignment Date format:
+	 * Assignment MM/DD/YY > MM/DD/YY
+	 * 
+	 */
 
 	public static List<Person> people;
 	static List<Day> days;
 	static Map<DayOfWeek, Double> ratio;
+	static List<String> prevAssignments;
 
-	public static String csvKey = "";
+	public static String csvKey = "1dBnoFECF_iG5YZ9TXmxGaVQlNrnbpR_OyWDT8uFKyh0";
 	public static String csvName = "";
 	public static boolean downloadPeopleCSV = true;
+	public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/uu");
 
 	public static void main( String[] args ) {
-		if( args.length >= 2 ) {
+		/*if( args.length >= 2 ) {
 			csvName = args[0];
 			csvKey = args[1];
 		} else {
@@ -57,18 +64,19 @@ public class Assigner {
 			} else {
 				if( new File(Constants.PEOPLE_CSV).exists() ) {
 					downloadPeopleCSV = false; // We can use the old version
-				} else {
+				} else {*/
 					csvName = Constants.DEFALT_SHEET_NAME;
 					csvKey = Constants.DEFAULT_KEY;
-				}
+				/*}
 			}
-		}
+		}*/
 
 		long dayCount = 0;
 
 		// Init lists
-		days = new ArrayList<Day>();
-		people = new ArrayList<Person>();
+		days = new ArrayList<>();
+		people = new ArrayList<>();
+		prevAssignments = new ArrayList<>();
 
 		// Init CSV stuff
 		PeopleCSVReader peopleData = new PeopleCSVReader( Constants.PEOPLE_CSV );
@@ -77,14 +85,16 @@ public class Assigner {
 		
 		/* DOWNLOAD CSV STUFF */
 		
-		CSVSheetManager newAssignmentCSVManager = new CSVSheetManager( csvKey, csvName, Constants.ASSIGNMENT_CSV );
-		
-		CSVSheetManager prevAssignmentCSVManager = new CSVSheetManager( csvKey, csvName, Constants.PREV_ASSIGNMENT_CSV );
-		prevAssignmentCSVManager.download();
+		CSVSheetManager assignmentCSVManager = new CSVSheetManager( csvKey );
+		prevAssignments = getAssignments( assignmentCSVManager.allSheetNames() );
 		
 		if( downloadPeopleCSV ) { // Only do so if there is a need to
-			CSVSheetManager peopleCSVManager = new CSVSheetManager( csvKey, csvName, Constants.PEOPLE_CSV );
-			peopleCSVManager.download();
+			CSVSheetManager peopleCSVManager = new CSVSheetManager( csvKey );
+			peopleCSVManager.download( Constants.PEOPLE_CSV_LOCAL, Constants.PEOPLE_CSV );
+		}
+		
+		for( int i = 0, n = prevAssignments.size(); i < n; ++i ) {
+			assignmentCSVManager.download( prevAssignments.get(1) );
 		}
 
 		/* LOAD DAYS */
@@ -143,7 +153,7 @@ public class Assigner {
 				}
 			}
 		}
-
+		
 		/* CALCULATE ASSIGNMENTS OF DAYS */
 
 		ratio = calculateDayOfWeekRatio( people );
@@ -212,7 +222,8 @@ public class Assigner {
 		}
 		
 		assignmentWriter.commitRecords(); // Writes to file
-		newAssignmentCSVManager.upload(); // Uploads that file
+		// Uploads the written file to the spreadsheet, with the sheet name of the starting and ending dates
+		assignmentCSVManager.upload( Constants.ASSIGNMENT_CSV, Constants.DATE_START.format(formatter) + " > " + Constants.DATE_END.format(formatter) );
 	}
 
 	/* INFO PRINTERS */
@@ -418,6 +429,17 @@ public class Assigner {
 		}
 
 		return result;
+	}
+	
+	private static List<String> getAssignments( List<String> list ){
+		for( String s : list ) {
+			// NOTE BEWARE
+			if( !s.contains(">") ) { // A cheap hack. Beware.
+				list.remove(s);
+			}
+		}
+		
+		return list;
 	}
 
 	public static boolean contains( DayOfWeek[] array, DayOfWeek element ) {
