@@ -2,9 +2,11 @@ package Spreadsheet;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,45 +21,27 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
+import com.google.api.services.sheets.v4.model.Sheet;
+import com.google.api.services.sheets.v4.model.Spreadsheet;
 
 import Main.Constants;
 
 public class CSVSheetManager {
-	private static List<String> scopes = Arrays.asList(SheetsScopes.SPREADSHEETS);
-	private static final String DATA_STORE_DIR = "credentials/wellshitthissucks.json";
+	private static List<String> scopes = Arrays.asList( SheetsScopes.SPREADSHEETS );
 
-	private static HttpTransport transport;
-	private static JacksonFactory jsonFactory;
-	private static FileDataStoreFactory dataStoreFactory;
+	private HttpTransport transport;
+	private JacksonFactory jsonFactory;
+	private FileDataStoreFactory dataStoreFactory;
 	private Sheets service;
 
 	private String sheetID;
-	private String defaultName;
-
-	public CSVSheetManager( String sheetID, String defaultName ) {
-		this.sheetID = sheetID;
-		this.defaultName = defaultName;
-
-		try {
-			transport = GoogleNetHttpTransport.newTrustedTransport();
-			dataStoreFactory = new FileDataStoreFactory( new File(DATA_STORE_DIR) );
-			jsonFactory = JacksonFactory.getDefaultInstance();
-
-			service = getSheetsService();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (GeneralSecurityException e) {
-			e.printStackTrace();
-		}
-	}
 
 	public CSVSheetManager( String sheetID ) {
 		this.sheetID = sheetID;
-		this.defaultName = Constants.DEFAULT_CSV_NAME;
 
 		try {
 			transport = GoogleNetHttpTransport.newTrustedTransport();
-			dataStoreFactory = new FileDataStoreFactory( new File(DATA_STORE_DIR) );
+			dataStoreFactory = new FileDataStoreFactory( new File( Constants.DATA_STORE_DIR ) );
 			jsonFactory = JacksonFactory.getDefaultInstance();
 
 			service = getSheetsService();
@@ -70,28 +54,51 @@ public class CSVSheetManager {
 
 	/* UPLOAD / DOWNLOAD FILES */
 
-	public boolean upload() {
-		return upload( defaultName );
-	}
-
-	public boolean upload( String localName ) {
-		return upload( localName, localName );
+	public boolean upload( String sheetName ) {
+		return upload( sheetName, sheetName );
 	}
 
 	public boolean upload( String localName, String remoteName ) {
-
+		return false; // Placeholder
 	}
 
-	public boolean download() {
-		return download( defaultName );
-	}
-
-	public boolean download( String localName ) {
-		return download( localName, localName );
+	public boolean download( String sheetName ) {
+		return download( sheetName, sheetName );
 	}
 	
+	/**
+	 * Saves the sheet from the spreadsheet with the id {@code sheetID} and name {@code remoteName}
+	 * to {@code localName}.
+	 * @param localName The location to save the sheet to locally
+	 * @param remoteName The name of the sheet server-side
+	 * @return True if no error was thrown, false if one was
+	 */
 	public boolean download( String localName, String remoteName ) {
+		try {
+			FileOutputStream out = new FileOutputStream( localName );
+			service.spreadsheets().get( sheetID ).executeAndDownloadTo( out );
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
 		
+		return true;
+	}
+	
+	public List<String> allSheetNames() {
+		List<String> result = new ArrayList<>();
+		
+		try {
+			Spreadsheet response1 = service.spreadsheets().get( sheetID ).setIncludeGridData( false ).execute();
+			
+			for( Sheet s : response1.getSheets() ) {
+				result.add( s.getProperties().getTitle() );
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
 	}
 
 	/* GOOGLE AUTH STUFF */
