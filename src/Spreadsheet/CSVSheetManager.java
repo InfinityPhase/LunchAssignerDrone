@@ -68,10 +68,11 @@ public class CSVSheetManager {
 	
 	/**
 	 * Saves the sheet from the spreadsheet with the id {@code sheetID} and name {@code remoteName}
-	 * to {@code localName}.
+	 * to {@code localName}. Will create a new file on the filesystem, overwriting any files
+	 * with the same name.
 	 * @param localName The location to save the sheet to locally
 	 * @param remoteName The name of the sheet server-side
-	 * @return True if no error was thrown, false if one was
+	 * @return True if the operation was successful, false if an error was thrown
 	 */
 	public boolean download( String localName, String remoteName ) {
 		try {
