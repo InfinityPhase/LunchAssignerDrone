@@ -50,7 +50,6 @@ public class Assigner {
 	public static String csvKey = "1dBnoFECF_iG5YZ9TXmxGaVQlNrnbpR_OyWDT8uFKyh0";
 	public static String csvName = "";
 	public static boolean downloadPeopleCSV = true;
-	public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/uu");
 
 	public static void main( String[] args ) {
 		/*if( args.length >= 2 ) {
@@ -128,7 +127,7 @@ public class Assigner {
 
 		System.out.println("TOTAL PEOPLE: " + people.size());
 
-		// Load previous data into person storage
+		// Load all previous data into person storage
 		for( String s : prevAssignments ) {
 			File f = new File( s );
 			if(  f.exists() ) {
@@ -225,7 +224,7 @@ public class Assigner {
 		
 		assignmentWriter.commitRecords(); // Writes to file
 		// Uploads the written file to the spreadsheet, with the sheet name of the starting and ending dates
-		assignmentCSVManager.upload( Constants.ASSIGNMENT_CSV, Constants.DATE_START.format(formatter) + " > " + Constants.DATE_END.format(formatter) );
+		assignmentCSVManager.upload( Constants.ASSIGNMENT_CSV, Constants.DATE_START.format( Constants.FORMMATER ) + " > " + Constants.DATE_END.format( Constants.FORMMATER ) );
 	}
 
 	/* INFO PRINTERS */

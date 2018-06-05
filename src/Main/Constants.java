@@ -3,15 +3,17 @@ package Main;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.format.DateTimeFormatter;
 
 public final class Constants {
-	// General
 	
+	// General
 	public static final int ASSIGNMENT_PEOPLE = 3;
 	public static final int BACKUP_PEOPLE = 2;
 	public static final String ASSIGNMENT_PREFIX = "Assignments";
 	public static final String DATA_STORE_DIR = "credentials/wellshitthissucks.json";
 	public static final String[] DEFAULT_ASSIGNMENT_HEADER = { "Date", "Day Of Week", "Person A", "Person B", "Person C", "Backup A", "Backup B", "Status" };
+	public static final DateTimeFormatter FORMMATER = DateTimeFormatter.ofPattern("MM/dd/uuuu");
 	
 	// Value constants
 	public static final double DEFAULT_VALUE = 1.0;
