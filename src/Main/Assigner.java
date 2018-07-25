@@ -130,19 +130,18 @@ public class Assigner {
 
 					// Put any calculations for individual value here
 					double value = Constants.DEFAULT_VALUE;
-					
 					value += ( 1.0 * p.assignedDays.size() );
-					
+
 					if( p.getLeadership() ) {
 						value += Constants.LEADERSHIP_VALUE;
 					}
-					
+
 					individualValue.put( p, value );
 				}
-				
+
 				totalValue = sumValues( individualValue );
 				totalValue += ( days.size() * Constants.ASSIGNMENT_PEOPLE );
-				
+
 				for( int i = 0; i < possPeople.size(); ++i ) {
 					Person p = possPeople.get(i);
 					double matchValue = individualValue.get(p);
@@ -175,10 +174,12 @@ public class Assigner {
 		for( Day d : days ) {
 			assignmentWriter.addDay( d );
 		}
-		//assignmentWriter.commitRecords(); // Writes to file
-//
-//		printAssignmentRange( people );
-//		printPeople( people );
+		assignmentWriter.commitRecords(); // Writes to file
+		//
+		//		printAssignmentRange( people );
+		//		printPeople( people );
+		printSmallestAssignmentRange( people );
+		printUnusedPeople( people );
 	}
 
 	/* INFO PRINTERS */
@@ -234,6 +235,22 @@ public class Assigner {
 		}
 	}
 
+	private static void printSmallestAssignmentRange( List<Person> ppl ) {
+		List<Long> ranges = new ArrayList<>();
+
+		for( Person p : ppl ) {
+			List<LocalDate> days = p.assignedDays;
+			Collections.sort( days );
+			Long tmp = ( ( days.size() > 0 ? days.get( days.size()-1 ).toEpochDay() : 0) - ( days.size() > 0 ? days.get( 0 ).toEpochDay() : 0) );
+			if( tmp != 0 ) {
+				ranges.add( tmp );
+			}
+
+		}
+		Collections.sort( ranges );
+		System.out.println("=> SMALLEST RANGE: " + ranges.get(0) + " LARGEST RANGE: " + ranges.get(ranges.size()-1));
+	}
+
 	private static void printPeople( List<Person> people ) {
 		System.out.println("PEOPLE IN SYSTEM: " + people.size());
 		for( Person p : people ) {
@@ -285,6 +302,15 @@ public class Assigner {
 
 		return result.toArray( new Day[ result.size() ] );
 	}
+	
+	private static void printUnusedPeople( List<Person> ppl ) {
+		System.out.println("=> UNUSED PEOPLE:");
+		for( Person p : ppl ) {
+			if( p.assignedDays.size() == 0 ) {
+				System.out.println("===> " + p.name);
+			}
+		}
+	}
 
 	/* UTILITIES */
 
@@ -328,14 +354,14 @@ public class Assigner {
 
 		return result;
 	}
-	
+
 	private static double sumValues( Map<Person, Double> people ) {
 		double result = 0;
-		
+
 		for( Double d: people.values() ) {
 			result += d;
 		}
-		
+
 		return result;
 	}
 
