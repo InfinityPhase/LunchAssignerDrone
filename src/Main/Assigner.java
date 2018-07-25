@@ -61,11 +61,19 @@ public class Assigner {
 			days.add( new Day( Constants.DATE_START.plusDays(i) ) );
 		}
 
-		// Remove weekends
+		// Remove days of the week we don't work. Like weekends.
 		List<Day> toRemove = new ArrayList<Day>();
 		for( Day d : days ) {
 			if( contains( Constants.DAY_NO_ROTATIONS, d.getDayOfWeek() ) ) {
 				toRemove.add( d );
+			} else if( contains( Constants.DATE_NO_ROTATIONS, d.getDate() ) ) {
+				toRemove.add( d );
+			} else {
+				for( LocalDate[] range : Constants.RANGE_NO_ROTATIONS ) {
+					if( ( range[0] != null && range[1] != null ) && range[0].isBefore( d.getDate() ) && range[1].isAfter( d.getDate() ) ) {
+						toRemove.add( d );
+					}
+				}
 			}
 		}
 		days.removeAll( toRemove );
@@ -414,6 +422,16 @@ public class Assigner {
 
 	public static boolean contains( DayOfWeek[] array, DayOfWeek element ) {
 		for( DayOfWeek d : array ) {
+			if( d.equals( element ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+	
+	public static boolean contains( LocalDate[] array, LocalDate element ) {
+		for( LocalDate d : array ) {
 			if( d.equals( element ) ) {
 				return true;
 			}
