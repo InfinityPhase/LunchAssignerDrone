@@ -70,7 +70,7 @@ public class Assigner {
 				toRemove.add( d );
 			} else {
 				for( LocalDate[] range : Constants.RANGE_NO_ROTATIONS ) {
-					if( ( range[0] != null && range[1] != null ) && range[0].isBefore( d.getDate() ) && range[1].isAfter( d.getDate() ) ) {
+					if( ( range[0] != null && range[1] != null ) && ( range[0].isBefore( d.getDate() ) || range[0].isEqual( d.getDate() ) ) && ( range[1].isAfter( d.getDate() ) || range[1].isEqual( d.getDate() ) ) ) {
 						toRemove.add( d );
 					}
 				}
@@ -186,15 +186,16 @@ public class Assigner {
 		//
 		//		printAssignmentRange( people );
 		//		printPeople( people );
+		printAssignments( days );
 		printSmallestAssignmentRange( people );
-		printUnusedPeople( people );
+		//printUnusedPeople( people );
 	}
 
 	/* INFO PRINTERS */
 
 	private static void printAssignments( List<Day> days ) {
 		for( Day d : days ) {
-			System.out.println("DAY: " + d.getDayOfWeek());
+			System.out.println("DAY: " + d.getDate().toString());
 			System.out.println("==> PEOPLE:");
 			for( Person p : d.assignments ) {
 				System.out.println("====> NAME: " + p.name);

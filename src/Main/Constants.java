@@ -25,7 +25,7 @@ public final class Constants {
 	// Blacklist of days for rotations
 	public static final DayOfWeek[] DAY_NO_ROTATIONS = { DayOfWeek.SATURDAY, DayOfWeek.SUNDAY, DayOfWeek.MONDAY };
 	public static final LocalDate[] DATE_NO_ROTATIONS = {};
-	public static final LocalDate[][] RANGE_NO_ROTATIONS = {};
+	public static final LocalDate[][] RANGE_NO_ROTATIONS = {}; // Inclusive
 	
 	public static final String[] DEFAULT_ASSIGNMENT_HEADER = { "Date", "Day Of Week", "Person A", "Person B", "Person C", "Backup A", "Backup B", "Status" };
 
