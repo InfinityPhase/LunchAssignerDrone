@@ -21,7 +21,6 @@ public class AssignmentCSVReader {
 
 	private List<CSVDay> csvDays;
 
-
 	public AssignmentCSVReader( String fileName, String[] header ) {
 		this.fileName = fileName;
 		this.header = header;

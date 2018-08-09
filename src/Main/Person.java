@@ -19,6 +19,7 @@ public class Person {
 
 	// Self explanatory, hopefully
 	public List<LocalDate> assignedDays;
+	public List<LocalDate> backupDays;
 	private List<LocalDate> presentDays;
 	private List<LocalDate> missedDays;
 
@@ -33,11 +34,12 @@ public class Person {
 	private LocalDate prevDateQueired;
 	private int prevCountReturned;
 
-	public Person( String name, DayOfWeek[] avalibleDays, List<LocalDate> presentDays, List<LocalDate> assignedDays, List<LocalDate> missedDays, List<LocalDate> blacklistDate, String email, String note, String per3, String per4, boolean leadership ) {
+	public Person( String name, DayOfWeek[] avalibleDays, List<LocalDate> presentDays, List<LocalDate> assignedDays, List<LocalDate> backupDays, List<LocalDate> missedDays, List<LocalDate> blacklistDate, String email, String note, String per3, String per4, boolean leadership ) {
 		this.name = name;
 		this.avalibleDays = avalibleDays;
 		this.presentDays = presentDays;
 		this.assignedDays = assignedDays;
+		this.backupDays = backupDays;
 		this.missedDays = missedDays;
 		this.blacklistDate = blacklistDate;
 		
@@ -52,7 +54,7 @@ public class Person {
 	}
 	
 	public Person( String name, DayOfWeek[] days, String email, String note, String per3, String per4, boolean leadership ) {
-		this( name, days, new ArrayList<LocalDate>(), new ArrayList<LocalDate>(), new ArrayList<LocalDate>(), new ArrayList<LocalDate>(), email, note, per3, per4, leadership );
+		this( name, days, new ArrayList<LocalDate>(), new ArrayList<LocalDate>(), new ArrayList<LocalDate>(), new ArrayList<LocalDate>(), new ArrayList<LocalDate>(), email, note, per3, per4, leadership );
 	}
 	
 	public Person( String name, DayOfWeek[] days, String email, String note, String per3, String per4 ) {
@@ -84,6 +86,12 @@ public class Person {
 		List<LocalDate> pastAssignments = new ArrayList<>();
 
 		for( LocalDate d : assignedDays ) {
+			if( d.isBefore(date) ) {
+				pastAssignments.add(d);
+			}
+		}
+		
+		for( LocalDate d : backupDays ) {
 			if( d.isBefore(date) ) {
 				pastAssignments.add(d);
 			}
@@ -147,8 +155,29 @@ public class Person {
 		}
 	}
 	
+	public int futureBackupCount( LocalDate date ) {
+		// TODO can be optimized, bc all days past the first match should also match
+		if( !date.isEqual(prevDateQueired) ) {
+			int count = 0;
+
+			for( LocalDate d : backupDays ) {
+				if( d.isAfter( date ) ) {
+					++count;
+				}
+			}
+
+			this.prevCountReturned = count;
+			this.prevDateQueired = date;
+
+			return count;
+		} else {
+			return prevCountReturned;
+		}
+	}
+	
 	public void sortAllAssignments() {
 		Collections.sort( assignedDays );
+		Collections.sort( backupDays );
 		Collections.sort( missedDays );
 		Collections.sort( presentDays );
 	}
@@ -193,7 +222,7 @@ public class Person {
 	@Override
 	public int hashCode() {		
 		return new HashCodeBuilder(17, 37).append(name).append(assignedDays).append(blacklistDate)
-				.append(avalibleDays).append(missedDays).append(presentDays).append(note)
+				.append(avalibleDays).append(backupDays).append(missedDays).append(presentDays).append(note)
 				.append(per3).append(per4).append(leadership).toHashCode();
 	}
 
@@ -211,7 +240,8 @@ public class Person {
 				.append(blacklistDate, p.blacklistDate).append(assignedDays, p.assignedDays)
 				.append(presentDays, p.getPresentDays()).append(missedDays, p.getMissedDays())
 				.append(email, p.getEmail()).append(note, p.getNote()).append(per3, p.getPer3())
-				.append(per4, p.getPer4()).append(leadership, p.getLeadership()).isEquals();
+				.append(per4, p.getPer4()).append(leadership, p.getLeadership()).append(backupDays, p.backupDays)
+				.isEquals();
 	}
 
 }

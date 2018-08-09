@@ -128,6 +128,7 @@ public class Assigner {
 				List<Person> possPeople = getPeopleOnDay( people, dayOfWeek );
 				Map<Person, Double> individualValue = new HashMap<>(); // Collection of person to value assignments for this day of the wek
 				Map<Person, Double> tmpAssignment = new HashMap<>( Constants.ASSIGNMENT_PEOPLE + 1 );
+				Map<Person, Double> tmpBackup = new HashMap<>( Constants.BACKUP_PEOPLE + 1 );
 
 				double totalReliability = sumReliability( getPeopleOnDay( possPeople, d.getDayOfWeek() ) );
 				double totalValue = 0.0; // Sum of all the individual values of each person
@@ -138,13 +139,14 @@ public class Assigner {
 
 					// Put any calculations for individual value here
 					double value = Constants.DEFAULT_VALUE;
-					value += ( 1.0 * p.assignedDays.size() );
+					value -= ( 1.0 * p.assignedDays.size() ); // TODO What the hell, this line...
 
 					if( p.getLeadership() ) {
 						value += Constants.LEADERSHIP_VALUE;
 					}
 
 					individualValue.put( p, value );
+					System.out.println(p.name + " : " + value);
 				}
 
 				totalValue = sumValues( individualValue );
@@ -160,8 +162,15 @@ public class Assigner {
 					if( ( matchValue / totalValue ) <= scoreRatio ) {
 
 						tmpAssignment.put(p, matchValue);
-						if( tmpAssignment.size() >= 4 ) {
-							tmpAssignment = removeLowest( tmpAssignment );
+						if( tmpAssignment.size() > Constants.ASSIGNMENT_PEOPLE ) {
+							Person tmpPerson = getLowest( tmpAssignment );
+							
+							tmpBackup.put( tmpPerson, tmpAssignment.get(tmpPerson) );
+							tmpAssignment.remove(tmpPerson);
+							
+							if( tmpBackup.size() > Constants.BACKUP_PEOPLE ) {
+								tmpBackup = removeLowest(tmpBackup);
+							}
 						}
 					}
 
@@ -175,6 +184,11 @@ public class Assigner {
 				for( Person p : tmpAssignment.keySet() ) {
 					p.assignedDays.add( d.getDate() );
 				}
+				
+				d.backups.addAll( tmpBackup.keySet() );
+				for( Person p : tmpBackup.keySet() ) {
+					p.backupDays.add( d.getDate() );
+				}
 			}
 		}
 
@@ -183,12 +197,13 @@ public class Assigner {
 			assignmentWriter.addDay( d );
 		}
 		assignmentWriter.commitRecords(); // Writes to file
-		//
-		//		printAssignmentRange( people );
-		//		printPeople( people );
-		printAssignments( days );
-		printSmallestAssignmentRange( people );
-		//printUnusedPeople( people );
+		
+//		printPeople( people );
+//		printAssignments( days );
+//		printAssignmentRange( people );
+//		printSmallestAssignmentRange( people );
+//		printUnusedPeople( people );
+//		printAssignmentBackupCount( people );
 	}
 
 	/* INFO PRINTERS */
@@ -320,6 +335,23 @@ public class Assigner {
 			}
 		}
 	}
+	
+	private static Map<Person, Double> assignmentToBackupRatio( List<Person> ppl ) {
+		Map<Person, Double> result = new HashMap<>();
+		
+		for( Person p : ppl ) {
+			result.put(p, ( 1.0 * p.assignedDays.size() / p.backupDays.size() ));
+			System.out.println("=> " + p.name + " : " + ( p.assignedDays.size() / p.backupDays.size() ));
+		}
+		
+		return result;
+	}
+	
+	private static void printAssignmentBackupCount( List<Person> ppl ) {
+		for( Person p : ppl ) {
+			System.out.println("=> " + p.name + " : " + p.assignedDays.size() + " - " + p.backupDays.size() );
+		}
+	}
 
 	/* UTILITIES */
 
@@ -334,6 +366,18 @@ public class Assigner {
 		map.remove(lowest);
 
 		return map;
+	}
+	
+	private static Person getLowest( Map<Person, Double> map ) {
+		Person lowest = null;
+		
+		for( Person p : map.keySet() ) {
+			if( lowest == null || map.get(p) < map.get(lowest) ) {
+				lowest = p;
+			}
+		}
+		
+		return lowest;
 	}
 
 	private static DayOfWeek[] orderByRatio( Map<DayOfWeek, Double> ratio ) {

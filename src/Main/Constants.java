@@ -15,7 +15,7 @@ public final class Constants {
 	
 	// Value constants
 	public static final double DEFAULT_VALUE = 1.0;
-	public static final double LEADERSHIP_VALUE = 0.5;
+	public static final double LEADERSHIP_VALUE = 2.0;
 
 	// YEAR, MONTH, DAY
 	public static final LocalDate DATE_START = LocalDate.of( 2018, Month.OCTOBER, 1 );
