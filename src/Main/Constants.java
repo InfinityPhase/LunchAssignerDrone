@@ -18,14 +18,19 @@ public final class Constants {
 	public static final double LEADERSHIP_VALUE = 2.0;
 
 	// YEAR, MONTH, DAY
-	public static final LocalDate DATE_START = LocalDate.of( 2018, Month.OCTOBER, 1 );
-	public static final LocalDate DATE_END = LocalDate.of( 2019, Month.MARCH, 1 );
+	public static final LocalDate DATE_START = LocalDate.of( 2018, Month.AUGUST, 15 );
+	public static final LocalDate DATE_END = LocalDate.of( 2019, Month.JUNE, 3 );
 	public static final LocalDate DATE_TODAY = LocalDate.now();
 	
 	// Blacklist of days for rotations
-	public static final DayOfWeek[] DAY_NO_ROTATIONS = { DayOfWeek.SATURDAY, DayOfWeek.SUNDAY, DayOfWeek.MONDAY };
-	public static final LocalDate[] DATE_NO_ROTATIONS = {};
-	public static final LocalDate[][] RANGE_NO_ROTATIONS = {}; // Inclusive
+	public static final DayOfWeek[] DAY_NO_ROTATIONS = { DayOfWeek.SATURDAY, DayOfWeek.SUNDAY };
+	public static final LocalDate[] DATE_NO_ROTATIONS = { LocalDate.of(2018, Month.SEPTEMBER, 3), LocalDate.of(2018, Month.NOVEMBER, 12), 
+			LocalDate.of(2018, Month.NOVEMBER, 21), LocalDate.of(2019, Month.JANUARY, 21), LocalDate.of(2019, Month.MAY, 27) };
+	public static final LocalDate[][] RANGE_NO_ROTATIONS = { {LocalDate.of(2018, Month.OCTOBER, 1), LocalDate.of(2018, Month.OCTOBER, 5)}, 
+			{LocalDate.of(2018, Month.OCTOBER, 22), LocalDate.of(2018, Month.NOVEMBER, 2)}, {LocalDate.of(2018, Month.NOVEMBER, 22), LocalDate.of(2018, Month.NOVEMBER, 23)}, 
+			{LocalDate.of(2018, Month.DECEMBER, 19), LocalDate.of(2018, Month.DECEMBER, 21)}, {LocalDate.of(2018, Month.DECEMBER, 24), LocalDate.of(2019, Month.JANUARY, 7)}, 
+			{LocalDate.of(2019, Month.FEBRUARY, 18), LocalDate.of(2019, Month.FEBRUARY, 22)}, {LocalDate.of(2019, Month.MARCH, 4), LocalDate.of(2019, Month.JANUARY, 15)}, 
+			{LocalDate.of(2019, Month.APRIL, 8), LocalDate.of(2019, Month.APRIL, 12)}, {LocalDate.of(2019, Month.JUNE, 4), LocalDate.of(2019, Month.JUNE, 6)} }; // Inclusive
 	
 	public static final String[] DEFAULT_ASSIGNMENT_HEADER = { "Date", "Day Of Week", "Person A", "Person B", "Person C", "Backup A", "Backup B", "Status" };
 
