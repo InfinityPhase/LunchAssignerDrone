@@ -120,6 +120,7 @@ public class Assigner {
 		/* CALCULATE ASSIGNMENTS OF DAYS */
 
 		ratio = calculateDayOfWeekRatio( people );
+		System.out.println("DoW RATIO: " + ratio);
 
 		// Assign days in a disorderly fasion
 		for( DayOfWeek dayOfWeek : orderByRatio( ratio ) ) {
@@ -139,14 +140,13 @@ public class Assigner {
 
 					// Put any calculations for individual value here
 					double value = Constants.DEFAULT_VALUE;
-					value -= ( 1.0 * p.assignedDays.size() ); // TODO What the hell, this line...
+					value -= ( 0.5 * p.assignedDays.size() );
 
 					if( p.getLeadership() ) {
 						value += Constants.LEADERSHIP_VALUE;
 					}
 
 					individualValue.put( p, value );
-					System.out.println(p.name + " : " + value);
 				}
 
 				totalValue = sumValues( individualValue );
@@ -163,6 +163,7 @@ public class Assigner {
 
 						tmpAssignment.put(p, matchValue);
 						if( tmpAssignment.size() > Constants.ASSIGNMENT_PEOPLE ) {
+							// Basically shifts people down, from Assignments to Backup, then removed...
 							Person tmpPerson = getLowest( tmpAssignment );
 							
 							tmpBackup.put( tmpPerson, tmpAssignment.get(tmpPerson) );
@@ -202,7 +203,8 @@ public class Assigner {
 //		printAssignments( days );
 //		printAssignmentRange( people );
 //		printSmallestAssignmentRange( people );
-//		printUnusedPeople( people );
+		printPeopleDayCount(people);
+		printUnusedPeople( people );
 //		printAssignmentBackupCount( people );
 	}
 
@@ -314,6 +316,13 @@ public class Assigner {
 			System.out.println("RATIO: " + ratio.get(day));
 		}
 	}
+	
+	private static void printPeopleDayCount( List<Person> ppl ) {
+		System.out.println("PERSON ASSIGNMENT COUNT:");
+		for( Person p : ppl ) {
+			System.out.println("=> " + p.name + "(" + p.avalibleDays.length + ") : " + p.assignedDays.size() + "|" + p.backupDays.size());
+		}
+	}
 
 	private static Day[] getDays( List<Day> days, DayOfWeek dow ) {
 		List<Day> result = new ArrayList<>();
@@ -328,10 +337,10 @@ public class Assigner {
 	}
 	
 	private static void printUnusedPeople( List<Person> ppl ) {
-		System.out.println("=> UNUSED PEOPLE:");
+		System.out.println("UNUSED PEOPLE:");
 		for( Person p : ppl ) {
 			if( p.assignedDays.size() == 0 ) {
-				System.out.println("===> " + p.name);
+				System.out.println("=> " + p.name);
 			}
 		}
 	}
