@@ -20,6 +20,7 @@ repositories {
 
 dependencies {
     compile "com.opencsv:opencsv:4.0"
+    compile "com.univocity:univocity-parsers:2.7.5"
 }
 
 sourceSets {
