@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.opencsv.bean.CsvBindByName;
+import  com.univocity.parsers.annotations.*;
 
 import Main.Assigner;
 import Main.Day;
@@ -13,28 +13,28 @@ import Main.Person;
 
 public class CSVDay {
 	
-	@CsvBindByName(column = "Date", required = true)
+	@Parsed(field = "Date", defaultNullRead = "")
 	protected String date;
 	
-	@CsvBindByName(column = "Day Of Week", required = false)
+	@Parsed(field = "Day Of Week", defaultNullRead = "")
 	protected String dayOfWeek;
 
-	@CsvBindByName(column = "Person A", required = false)
+	@Parsed(field = "Person A", defaultNullRead = "")
 	protected String personA;
 
-	@CsvBindByName(column = "Person B", required = false)
+	@Parsed(field = "Person B", defaultNullRead = "")
 	protected String personB;
 
-	@CsvBindByName(column = "Person C", required = false)
+	@Parsed(field = "Person C", defaultNullRead = "")
 	protected String personC;
 
-	@CsvBindByName(column = "Backup A", required = false)
+	@Parsed(field = "Backup A", defaultNullRead = "")
 	protected String backupA;
 
-	@CsvBindByName(column = "Backup B", required = false)
+	@Parsed(field = "Backup B", defaultNullRead = "")
 	protected String backupB;
 
-	@CsvBindByName(column = "Status", required = false)
+	@Parsed(field = "Status", defaultNullRead = "")
 	protected String status;
 	
 	public CSVDay( Day day ) {

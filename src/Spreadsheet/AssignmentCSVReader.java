@@ -9,8 +9,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
+import com.univocity.parsers.csv.CsvParser;
+import com.univocity.parsers.csv.CsvParserSettings;
 
 import Main.Constants;
 import Main.Day;
@@ -18,14 +18,21 @@ import Main.Day;
 public class AssignmentCSVReader {
 	private String fileName;
 	private String[] header;
+	private CsvParserSettings parserSettings;
 
 	private List<CSVDay> csvDays;
 
 	public AssignmentCSVReader( String fileName, String[] header ) {
 		this.fileName = fileName;
 		this.header = header;
-
 		this.csvDays = new ArrayList<>();
+		
+		this.parserSettings = new CsvParserSettings();
+		parserSettings.setIgnoreLeadingWhitespaces(true);
+		parserSettings.setIgnoreTrailingWhitespaces(true);
+		parserSettings.setEmptyValue("");
+		parserSettings.setKeepQuotes(false);
+		parserSettings.setNullValue("");
 	}
 
 	public AssignmentCSVReader( String fileName ) {
@@ -55,10 +62,10 @@ public class AssignmentCSVReader {
 	
 	public void loadDayData() {
 		try( BufferedReader reader = new BufferedReader( new InputStreamReader( new FileInputStream( new File( fileName ) ) ) ); ) {
-			CsvToBean<CSVDay> csvToBean = new CsvToBeanBuilder(reader).withType(CSVDay.class).withIgnoreLeadingWhiteSpace(true).build();
-
-			csvDays = csvToBean.parse();
-
+			CsvParser parser = new CsvParser( parserSettings );
+						
+			parser.parseAllRecords( reader, 50 );
+			parser.stopParsing();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

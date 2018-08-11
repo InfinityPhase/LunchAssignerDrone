@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.opencsv.CSVWriter;
+import com.univocity.parsers.csv.CsvWriter;
+import com.univocity.parsers.csv.CsvWriterSettings;
 
 import Main.Constants;
 import Main.Day;
@@ -55,13 +56,13 @@ public class AssignmentCSVWriter {
 	public boolean commitRecords() {
 		assignments = sortByDate( assignments );
 
-		try( CSVWriter writer = new CSVWriter( new BufferedWriter( new FileWriter( fileName, false ) ), 
-				CSVWriter.DEFAULT_SEPARATOR, CSVWriter.NO_QUOTE_CHARACTER, 
-				CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END); ) {
-			// We assume this file should be empty
-			writer.writeNext( header );
+		try( BufferedWriter bw = new BufferedWriter( new FileWriter( fileName, false ) ); ) {
+			CsvWriter writer = new CsvWriter( bw, new CsvWriterSettings() );
 			
-			List<String[]> lines = new ArrayList<>();
+			// We assume this file should be empty
+			writer.writeHeaders( header );
+			
+//			List<String[]> lines = new ArrayList<>();
 			for( Day d : assignments ) {
 				String[] line = new String[8];
 				line[0] = d.getDate().toString();
@@ -76,11 +77,12 @@ public class AssignmentCSVWriter {
 				
 				line[7] = d.getStatusString();
 
-				lines.add(line);
+				writer.writeRow(line);
+//				lines.add(line);
 			}
 			
-			writer.writeAll( lines );
 			writer.flush();
+			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
