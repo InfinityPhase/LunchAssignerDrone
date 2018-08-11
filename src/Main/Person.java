@@ -107,6 +107,7 @@ public class Person {
 	
 	public void present( LocalDate date ) {
 		presentDays.add( date );
+		assignedDays.add( date );
 	}
 
 	public void absent( Day day ) {
@@ -115,6 +116,7 @@ public class Person {
 	
 	public void absent( LocalDate date ) {
 		missedDays.add( date );
+		assignedDays.add( date );
 	}
 
 	public boolean avalible( DayOfWeek day ) {
