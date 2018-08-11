@@ -36,12 +36,21 @@ public class AssignmentCSVReader {
 		this( Constants.DEFAULT_CSV_NAME );
 	}
 
-	public CSVDay[] getAllDayData() {
-		if( csvDays.size() == 0 ) { // Only calculate this once.
+	@Deprecated
+	public CSVDay[] getAllDayDataArray() {
+		if( csvDays.size() == 0 ) {
 			loadDayData();
 		}
 
 		return csvDays.toArray( new CSVDay[ csvDays.size() ] );
+	}
+	
+	public List<CSVDay> getAllDayData() {
+		if( csvDays.size() == 0 ) { // Only calculate this once.
+			loadDayData();
+		}
+
+		return csvDays;
 	}
 	
 	public void loadDayData() {
