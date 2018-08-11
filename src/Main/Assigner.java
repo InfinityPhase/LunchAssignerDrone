@@ -33,6 +33,16 @@ public class Assigner {
 	 * The design goal of this program was "Minimum Viable Product", and the design
 	 * reflects this more than I would prefer. As I said, I'm sorry. Good Luck.
 	 */
+	
+	/*
+	 * How this thing actually functions:
+	 * People are assigned per day. After generating the list of all days that need
+	 * assignments, it is looped over. All possible applicants, meaning people who are
+	 * availible that day, have an individual value generated for themselves. This is 
+	 * currently based upon leadership status, as well as previous assignments. The more
+	 * assignments they have had, the lower their score. This makes it so that assignments
+	 * are more evenly distributed among people.
+	 */
 
 	// wget --no-check-certificate --output-document=LunchPeople.csv 'https://docs.google.com/spreadsheet/ccc?key=<KEY_HERE>&output=csv'
 
@@ -94,7 +104,7 @@ public class Assigner {
 		// Load previous data into person storage
 		File f = new File( Constants.PREV_ASSIGNMENT_CSV);
 		if(  f.exists() ) {
-			CSVDay[] prevAssignments = assignmentReader.getAllDayData();
+			List<CSVDay> prevAssignments = assignmentReader.getAllDayData();
 			for( CSVDay d : prevAssignments ) {
 				Day dd = d.getDay();
 
@@ -140,7 +150,7 @@ public class Assigner {
 
 					// Put any calculations for individual value here
 					double value = Constants.DEFAULT_VALUE;
-					value -= ( 0.5 * p.assignedDays.size() );
+					value += ( Constants.ASSIGNMENT_VALUE * p.assignedDays.size() ); // Assignment_Value is negative
 
 					if( p.getLeadership() ) {
 						value += Constants.LEADERSHIP_VALUE;
