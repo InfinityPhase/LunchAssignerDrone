@@ -105,6 +105,7 @@ public class Assigner {
 		File f = new File( Constants.PREV_ASSIGNMENT_CSV);
 		if(  f.exists() ) {
 			List<CSVDay> prevAssignments = assignmentReader.getAllDayData();
+			System.out.println("PREV DAY COUNT: " +prevAssignments.size());
 			for( CSVDay d : prevAssignments ) {
 				Day dd = d.getDay();
 

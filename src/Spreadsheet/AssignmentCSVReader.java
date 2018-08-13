@@ -9,6 +9,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.univocity.parsers.common.processor.BeanListProcessor;
+import com.univocity.parsers.common.record.Record;
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
 
@@ -19,6 +21,7 @@ public class AssignmentCSVReader {
 	private String fileName;
 	private String[] header;
 	private CsvParserSettings parserSettings;
+	private BeanListProcessor<CSVDay> rowProcessor;
 
 	private List<CSVDay> csvDays;
 
@@ -27,12 +30,17 @@ public class AssignmentCSVReader {
 		this.header = header;
 		this.csvDays = new ArrayList<>();
 		
+		this.rowProcessor = new BeanListProcessor<CSVDay>(CSVDay.class);
+		
 		this.parserSettings = new CsvParserSettings();
 		parserSettings.setIgnoreLeadingWhitespaces(true);
 		parserSettings.setIgnoreTrailingWhitespaces(true);
 		parserSettings.setEmptyValue("");
 		parserSettings.setKeepQuotes(false);
 		parserSettings.setNullValue("");
+		parserSettings.setProcessor(rowProcessor);
+		parserSettings.setHeaderExtractionEnabled(true);
+		
 	}
 
 	public AssignmentCSVReader( String fileName ) {
@@ -63,8 +71,10 @@ public class AssignmentCSVReader {
 	public void loadDayData() {
 		try( BufferedReader reader = new BufferedReader( new InputStreamReader( new FileInputStream( new File( fileName ) ) ) ); ) {
 			CsvParser parser = new CsvParser( parserSettings );
-						
-			parser.parseAllRecords( reader, 50 );
+
+			parser.parseAll(reader, 50);
+			csvDays = rowProcessor.getBeans();
+			
 			parser.stopParsing();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

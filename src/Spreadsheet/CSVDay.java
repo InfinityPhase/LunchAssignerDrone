@@ -14,30 +14,42 @@ import Main.Person;
 public class CSVDay {
 	
 	@Parsed(field = "Date", defaultNullRead = "")
-	protected String date;
+	private String date;
 	
 	@Parsed(field = "Day Of Week", defaultNullRead = "")
-	protected String dayOfWeek;
+	private String dayOfWeek;
 
 	@Parsed(field = "Person A", defaultNullRead = "")
-	protected String personA;
+	private String personA;
 
 	@Parsed(field = "Person B", defaultNullRead = "")
-	protected String personB;
+	private String personB;
 
 	@Parsed(field = "Person C", defaultNullRead = "")
-	protected String personC;
+	private String personC;
 
 	@Parsed(field = "Backup A", defaultNullRead = "")
-	protected String backupA;
+	private String backupA;
 
 	@Parsed(field = "Backup B", defaultNullRead = "")
-	protected String backupB;
+	private String backupB;
 
 	@Parsed(field = "Status", defaultNullRead = "")
-	protected String status;
+	private String status;
 	
-	public CSVDay( Day day ) {
+	/* NOTE Okay. This is important.
+	 * YOu see this constructor? This is bad.
+	 * This breaks the usage of reading in CSV
+	 * stuff, and will result in one heck of a 
+	 * strange error that will then result in 
+	 * frustration. That will lead to hair loss,
+	 * and you will be bald in 20 days. Do not
+	 * attempt.
+	 * 
+	 * This has been left to warn others of this
+	 * pitfall. Beware.
+	 */
+	/*public CSVDay( Day day ) { 
 		this.date = day.getDate().toString();
 		this.dayOfWeek = day.getDate().getDayOfWeek().toString();
 		
@@ -69,7 +81,7 @@ public class CSVDay {
 		
 		this.status = "";
 		
-	}
+	}*/
 	
 	public boolean getStatus( String name ) {
 		// Don't think too much about it, because you'll realize how stupid this system is.
@@ -89,6 +101,10 @@ public class CSVDay {
 	}
 	
 	public boolean getStatus( Person p ) {
+		if( p == null ) {
+			System.out.println("SHIT");
+			System.out.println(p);
+		}
 		return getStatus( p.name );
 	}
 	
@@ -97,13 +113,32 @@ public class CSVDay {
 		List<Person> backups = new ArrayList<>();
 		List<Person> present = new ArrayList<>();
 		
-		assignments.add( Assigner.searchPersonList( Assigner.people, this.personA ) );
-		assignments.add( Assigner.searchPersonList( Assigner.people, this.personB ) );
-		assignments.add( Assigner.searchPersonList( Assigner.people, this.personC ) );
-
-		backups.add( Assigner.searchPersonList( Assigner.people, this.backupA ) );
-		backups.add( Assigner.searchPersonList( Assigner.people, this.backupB ) );
-
+		Person tmp = null; // There's probably a better way to do this...
+		tmp = Assigner.searchPersonList( Assigner.people, this.personA );
+		if( tmp != null ) {
+			assignments.add( tmp );
+		}
+		
+		tmp = Assigner.searchPersonList( Assigner.people, this.personB );
+		if( tmp != null ) {
+			assignments.add( tmp );
+		}
+		
+		tmp = Assigner.searchPersonList( Assigner.people, this.personC );
+		if( tmp != null ) {
+			assignments.add( tmp );
+		}
+		
+		tmp = Assigner.searchPersonList( Assigner.people, this.backupA );
+		if( tmp != null ) {
+			backups.add( tmp );
+		}
+		
+		tmp = Assigner.searchPersonList( Assigner.people, this.backupB );
+		if( tmp != null ) {
+			backups.add( tmp );
+		}
+		
 		for( Person p : assignments ) {
 			if( getStatus(p) ) {
 				present.add(p);

@@ -2,53 +2,64 @@ package Spreadsheet;
 
 import java.time.DayOfWeek;
 
-import com.opencsv.bean.CsvBindByName;
+import com.univocity.parsers.annotations.BooleanString;
+import com.univocity.parsers.annotations.LowerCase;
+import com.univocity.parsers.annotations.Parsed;
 
 import Main.Assigner;
 
 public class CSVPerson {
-	
-	@CsvBindByName(column = "First Name", required = true)
+
+	@Parsed(field = "First Name")
 	protected String firstName;
-	
-	@CsvBindByName(column = "Last Name", required = true)
+
+	@Parsed(field = "Last Name")
 	protected String lastName;
-	
-	@CsvBindByName(column = "Email", required = false)
+
+	@Parsed(field = "Email")
 	protected String email;
-	
-	@CsvBindByName(column = "Period 3", required = false)
+
+	@Parsed(field = "Period 3")
 	protected String per3;
-	
-	@CsvBindByName(column = "Period 4", required = false)
+
+	@Parsed(field = "Period 4")
 	protected String per4;
-	
-	@CsvBindByName(column = "Days Avalible", required = true)
+
+	@Parsed(field = "Days Avalible")
 	protected String avalible;
-	
-	@CsvBindByName(column = "Notes", required = false)
+
+	@LowerCase
+	@BooleanString(falseStrings = {"no", "n", "null", "false"}, trueStrings = {"yes", "y", "true"})
+	@Parsed(field = "Leadership")
+	protected boolean leadership;
+
+	@Parsed(field = "Notes")
 	protected String notes;
-	
+
 	public String getName() {
 		return firstName + " " + lastName;
 	}
-	
+
 	public String getEmail() {
 		return email;
 	}
-	
+
 	public String getPer3() {
 		return per3;
 	}
-	
+
 	public String getPer4() {
 		return per4;
 	}
 	
+	public boolean getLeadership() {
+		return leadership;
+	}
+
 	public String getNotes() {
 		return notes;
 	}
-	
+
 	public DayOfWeek[] getAvalible() {
 		return Assigner.convertDays( avalible );
 	}
