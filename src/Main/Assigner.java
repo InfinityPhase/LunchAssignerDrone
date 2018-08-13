@@ -92,7 +92,7 @@ public class Assigner {
 
 		/* LOAD PEOPLE */
 
-		Person[] tmpPeople = peopleData.getPeople();
+		List<Person> tmpPeople = peopleData.getPeople();
 		for( Person p : tmpPeople ) {
 			people.add( p );
 		}
@@ -226,7 +226,7 @@ public class Assigner {
 			System.out.println("DAY: " + d.getDate().toString());
 			System.out.println("==> PEOPLE:");
 			for( Person p : d.assignments ) {
-				System.out.println("====> NAME: " + p.name);
+				System.out.println("====> NAME: " + p.getName());
 			}
 		}
 	}
@@ -237,7 +237,7 @@ public class Assigner {
 				System.out.println("DAY: " + d.getDayOfWeek());
 				System.out.println("==> PEOPLE:");
 				for( Person p : d.assignments ) {
-					System.out.println("====> NAME: " + p.name);
+					System.out.println("====> NAME: " + p.getName());
 				}
 			}
 		}
@@ -249,14 +249,14 @@ public class Assigner {
 				System.out.println("DAY: " + d.getDate().toString() + " (" + d.getDayOfWeek() + ")");
 				System.out.println("==> PEOPLE:");
 				for( Person p : d.assignments ) {
-					System.out.println("====> NAME: " + p.name);
+					System.out.println("====> NAME: " + p.getName());
 				}
 			}
 		}
 	}
 
 	private static void printAssignmentRange( Person p ) {
-		System.out.println("PERSON: " + p.name);
+		System.out.println("PERSON: " + p.getName());
 		List<LocalDate> days = p.assignedDays;
 		Collections.sort( days );
 
@@ -291,7 +291,7 @@ public class Assigner {
 	private static void printPeople( List<Person> people ) {
 		System.out.println("PEOPLE IN SYSTEM: " + people.size());
 		for( Person p : people ) {
-			System.out.println("==> NAME: " + p.name);
+			System.out.println("==> NAME: " + p.getName());
 			System.out.println("====> RATE: " + p.getScore(Constants.DATE_TODAY));
 			System.out.println("====> DAYS: " + p.assignedDays.size());
 		}
@@ -301,7 +301,7 @@ public class Assigner {
 		System.out.println("PEOPLE IN SYSTEM: " + people.size());
 		for( Person p : people ) {
 			if( p.avalible( weekday ) ) {
-				System.out.println("==> NAME: " + p.name);
+				System.out.println("==> NAME: " + p.getName());
 				System.out.println("====> RATE: " + p.getScore(Constants.DATE_TODAY));
 				System.out.println("====> DAYS: " + p.assignedDays.size());
 			}
@@ -309,7 +309,7 @@ public class Assigner {
 	}
 
 	private static void printPersonAssignmentDates( Person p ) {
-		System.out.println(p.name);
+		System.out.println(p.getName());
 		for( LocalDate d : p.assignedDays ) {
 			System.out.println("=>" + d.toString());
 		}
@@ -331,7 +331,7 @@ public class Assigner {
 	private static void printPeopleDayCount( List<Person> ppl ) {
 		System.out.println("PERSON ASSIGNMENT COUNT:");
 		for( Person p : ppl ) {
-			System.out.println("=> " + p.name + "(" + p.avalibleDays.length + ") : " + p.assignedDays.size() + "|" + p.backupDays.size());
+			System.out.println("=> " + p.getName() + "(" + p.getAvailibleDays().length + ") : " + p.assignedDays.size() + "|" + p.backupDays.size());
 		}
 	}
 
@@ -351,7 +351,7 @@ public class Assigner {
 		System.out.println("UNUSED PEOPLE:");
 		for( Person p : ppl ) {
 			if( p.assignedDays.size() == 0 ) {
-				System.out.println("=> " + p.name);
+				System.out.println("=> " + p.getName());
 			}
 		}
 	}
@@ -361,7 +361,7 @@ public class Assigner {
 		
 		for( Person p : ppl ) {
 			result.put(p, ( 1.0 * p.assignedDays.size() / p.backupDays.size() ));
-			System.out.println("=> " + p.name + " : " + ( p.assignedDays.size() / p.backupDays.size() ));
+			System.out.println("=> " + p.getName() + " : " + ( p.assignedDays.size() / p.backupDays.size() ));
 		}
 		
 		return result;
@@ -369,7 +369,7 @@ public class Assigner {
 	
 	private static void printAssignmentBackupCount( List<Person> ppl ) {
 		for( Person p : ppl ) {
-			System.out.println("=> " + p.name + " : " + p.assignedDays.size() + " - " + p.backupDays.size() );
+			System.out.println("=> " + p.getName() + " : " + p.assignedDays.size() + " - " + p.backupDays.size() );
 		}
 	}
 
@@ -443,7 +443,7 @@ public class Assigner {
 
 		for( int i = 0, n = people.size(); i < n; ++i ) {
 			for( int j = i+1; j < n; ++j ) {
-				if( people.get(i).name.equalsIgnoreCase( people.get(j).name ) ) {
+				if( people.get(i).getName().equalsIgnoreCase( people.get(j).getName() ) ) {
 					remove.add( people.get(j) ); // Remove the duplicate occurance
 				}
 			}
@@ -471,7 +471,7 @@ public class Assigner {
 		int totalCount = 0;
 
 		for( Person p : people ) {
-			for(DayOfWeek day : p.avalibleDays) {
+			for(DayOfWeek day : p.getAvailibleDays()) {
 				// We cannot add 1 to null, so check if it is null first
 				result.put( day, ( result.get(day)!=null ? result.get(day) : 0 ) + 1 );
 				++totalCount;
@@ -610,7 +610,7 @@ public class Assigner {
 
 	public static Person searchPersonList( List<Person> list, String name ) {
 		for( Person p : list ) {
-			if( p.name.compareTo( name ) == 0 ) {
+			if( p.getName().compareTo( name ) == 0 ) {
 				return p;
 			}
 		}

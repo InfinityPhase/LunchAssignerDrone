@@ -100,7 +100,7 @@ public class AssignmentCSVWriter {
 	
 	private String getNameOrBlank( List<Person> list, int index ) {
 		if( list.size() > index ) {
-			return list.get(index).name;
+			return list.get(index).getName();
 		} else {
 			return "";
 		}

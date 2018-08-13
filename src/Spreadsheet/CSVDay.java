@@ -105,7 +105,7 @@ public class CSVDay {
 			System.out.println("SHIT");
 			System.out.println(p);
 		}
-		return getStatus( p.name );
+		return getStatus( p.getName() );
 	}
 	
 	public Day getDay() {

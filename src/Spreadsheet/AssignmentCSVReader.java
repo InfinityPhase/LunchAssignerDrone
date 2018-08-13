@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.univocity.parsers.common.processor.BeanListProcessor;
-import com.univocity.parsers.common.record.Record;
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
 
