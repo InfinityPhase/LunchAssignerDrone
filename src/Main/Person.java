@@ -1,15 +1,10 @@
 package Main;
 
-import java.lang.reflect.Field;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import com.univocity.parsers.annotations.BooleanString;
 import com.univocity.parsers.annotations.LowerCase;
@@ -151,6 +146,7 @@ public class Person {
 
 			for( LocalDate d : backupDays ) {
 				if( d.isAfter( date ) ) {
+					//backupDays.size() - backupDays.indexOf(d);
 					++count;
 				}
 			}

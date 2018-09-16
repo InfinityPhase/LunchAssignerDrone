@@ -51,10 +51,6 @@ public class Day implements Comparable<Day> {
 		return present.toArray( new Person[ present.size() ] );
 	}
 	
-	public String getStatusString() {
-		return ""; // TODO Calculate status from present data
-	}
-	
 	/* UTILS */
 	
 	private static List<Person> calcPresent( List<Person> allPeople, String status ) {

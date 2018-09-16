@@ -75,8 +75,6 @@ public class AssignmentCSVWriter {
 				line[5] = getNameOrBlank( d.backups, 0 );
 				line[6] = getNameOrBlank( d.backups, 1 );
 				
-				line[7] = d.getStatusString();
-
 				writer.writeRow(line);
 //				lines.add(line);
 			}
