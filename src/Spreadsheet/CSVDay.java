@@ -28,6 +28,9 @@ public class CSVDay {
 	@Parsed(field = "Person C", defaultNullRead = "")
 	private String personC;
 
+	@Parsed(field = "Person D", defaultNullRead = "")
+	private String personD;
+
 	@Parsed(field = "Backup A", defaultNullRead = "")
 	private String backupA;
 
@@ -38,7 +41,7 @@ public class CSVDay {
 	private String status;
 	
 	/* NOTE Okay. This is important.
-	 * YOu see this constructor? This is bad.
+	 * You see this constructor? This is bad.
 	 * This breaks the usage of reading in CSV
 	 * stuff, and will result in one heck of a 
 	 * strange error that will then result in 
@@ -91,10 +94,12 @@ public class CSVDay {
 			return (status.length() >= 1 ? status.charAt(1) == 'y' : false );
 		} else if( name.compareTo( personC ) == 0 ) {
 			return (status.length() >= 2 ? status.charAt(2) == 'y' : false );
-		} else if( name.compareTo( backupA ) == 0 ) {
+		} else if( name.compareTo( personD ) == 0 ) {
 			return (status.length() >= 3 ? status.charAt(3) == 'y' : false );
-		} else if( name.compareTo( backupB ) == 0 ) {
+		} else if( name.compareTo( backupA ) == 0 ) {
 			return (status.length() >= 4 ? status.charAt(4) == 'y' : false );
+		} else if( name.compareTo( backupB ) == 0 ) {
+			return (status.length() >= 5 ? status.charAt(5) == 'y' : false );
 		} else {
 			return false;
 		}
@@ -102,7 +107,7 @@ public class CSVDay {
 	
 	public boolean getStatus( Person p ) {
 		if( p == null ) {
-			System.out.println("SHIT");
+			System.out.println("NO PERSON FOUND. ERROR.");
 			System.out.println(p);
 		}
 		return getStatus( p.getName() );
@@ -128,6 +133,11 @@ public class CSVDay {
 		if( tmp != null ) {
 			assignments.add( tmp );
 		}
+
+		tmp = Assigner.searchPersonList( Assigner.people, this.personD );
+		if( tmp != null ) {
+			assignments.add( tmp );
+		}
 		
 		tmp = Assigner.searchPersonList( Assigner.people, this.backupA );
 		if( tmp != null ) {
@@ -150,7 +160,7 @@ public class CSVDay {
 				present.add(p);
 			}
 		}
-		
+
 		return new Day( LocalDate.parse(date), assignments, backups, present );
 	}
 	
@@ -176,6 +186,10 @@ public class CSVDay {
 		return personC;
 	}
 
+	public String getPersonD() {
+		return personD;
+	}
+
 	public String getBackupA() {
 		return backupA;
 	}
@@ -195,7 +209,7 @@ public class CSVDay {
 	}
 	
 	public DayOfWeek getDayOfWeekEnum() {
-		return DayOfWeek.valueOf(dayOfWeek);
+		return dayOfWeek.equalsIgnoreCase("Wendsday") ? DayOfWeek.WEDNESDAY : DayOfWeek.valueOf(dayOfWeek);
 	}
 
 }

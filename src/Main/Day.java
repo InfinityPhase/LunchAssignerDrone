@@ -2,7 +2,6 @@ package Main;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.temporal.TemporalField;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,23 +11,23 @@ public class Day implements Comparable<Day> {
 	public List<Person> present; // People who were actually here
 	private LocalDate date;
 
-	public Day( LocalDate date, List<Person> assingments, List<Person> backups, List<Person> present ) {
-		this.assignments = assingments;
+	public Day( LocalDate date, List<Person> assignments, List<Person> backups, List<Person> present ) {
+		this.assignments = assignments;
 		this.backups = backups;
 		this.present = present;
 		this.date = date;
 	}
 	
-	public Day( LocalDate date, List<Person> assingments, List<Person> backups, String status ) {		
-		this( date, assingments, backups, calcPresent( appendLists( assingments, backups ), status ) );
+	public Day( LocalDate date, List<Person> assignments, List<Person> backups, String status ) {
+		this( date, assignments, backups, calcPresent( appendLists( assignments, backups ), status ) );
 	}
 
-	public Day( LocalDate date, List<Person> assingments ) {
-		this( date, assingments, new ArrayList<Person>(), new ArrayList<Person>() );
+	public Day( LocalDate date, List<Person> assignments ) {
+		this( date, assignments, new ArrayList<>(), new ArrayList<>() );
 	}
 
 	public Day( LocalDate date ) {
-		this( date, new ArrayList<Person>() );
+		this( date, new ArrayList<>() );
 	}
 
 	public DayOfWeek getDayOfWeek() {

@@ -35,6 +35,7 @@ public class AssignmentCSVReader {
 		parserSettings.setIgnoreLeadingWhitespaces(true);
 		parserSettings.setIgnoreTrailingWhitespaces(true);
 		parserSettings.setEmptyValue("");
+		parserSettings.setSkipEmptyLines(true);
 		parserSettings.setKeepQuotes(false);
 		parserSettings.setNullValue("");
 		parserSettings.setProcessor(rowProcessor);

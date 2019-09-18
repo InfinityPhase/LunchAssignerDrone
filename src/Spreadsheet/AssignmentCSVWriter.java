@@ -71,9 +71,10 @@ public class AssignmentCSVWriter {
 				line[2] = getNameOrBlank( d.assignments, 0 );
 				line[3] = getNameOrBlank( d.assignments, 1 );
 				line[4] = getNameOrBlank( d.assignments, 2 );
+				line[5] = getNameOrBlank( d.assignments, 3 );
 
-				line[5] = getNameOrBlank( d.backups, 0 );
-				line[6] = getNameOrBlank( d.backups, 1 );
+				line[6] = getNameOrBlank( d.backups, 0 );
+				line[7] = getNameOrBlank( d.backups, 1 );
 				
 				writer.writeRow(line);
 //				lines.add(line);

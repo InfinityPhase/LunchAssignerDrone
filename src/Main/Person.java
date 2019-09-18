@@ -36,7 +36,7 @@ public class Person {
 	@Parsed(field = {"Period 4", "What is your fourth period classroom?"})
 	private String per4;
 
-	@Parsed(field = {"Days Avalible", "Which of the following days are you available?"})
+	@Parsed(field = {"Days Avalible", "Which of the following days are you available?", "Days Available (Yes, Wednesday is spelled wrong)"})
 	private String avalible;
 
 	@LowerCase
@@ -196,7 +196,7 @@ public class Person {
 	public boolean getLeadership() {
 		return leadership;
 	}
-	
+
 	public String getName() {
 		return firstName + " " + lastName;
 	}

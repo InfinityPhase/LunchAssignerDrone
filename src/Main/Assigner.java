@@ -109,7 +109,7 @@ public class Assigner {
 			for( CSVDay d : prevAssignments ) {
 				Day dd = d.getDay();
 
-				// Who needs efficency, amirite?
+				// Who needs efficiency, amirite?
 				for( Person p : dd.assignments ) {
 					if( dd.present.contains( p ) ) {
 						p.present(dd);
@@ -170,7 +170,7 @@ public class Assigner {
 					// How often this person should be assigned compared to others
 					double scoreRatio = p.getScore(Constants.DATE_TODAY) / totalReliability;
 
-					if( ( matchValue / totalValue ) <= scoreRatio ) {
+					//if( ( matchValue / totalValue ) <= scoreRatio ) {
 
 						tmpAssignment.put(p, matchValue);
 						if( tmpAssignment.size() > Constants.ASSIGNMENT_PEOPLE ) {
@@ -184,7 +184,9 @@ public class Assigner {
 								tmpBackup = removeLowest(tmpBackup);
 							}
 						}
-					}
+					/*} else {
+                        System.out.println(p.getName() + ' ' + p.getScore(Constants.DATE_TODAY) / totalReliability + ' ' + matchValue / totalValue);
+                    }*/
 
 					if( d.assignments.size() >= Constants.ASSIGNMENT_PEOPLE ) {
 						break; // Don't put more than 3 people on each day
@@ -350,7 +352,7 @@ public class Assigner {
 	private static void printUnusedPeople( List<Person> ppl ) {
 		System.out.println("UNUSED PEOPLE:");
 		for( Person p : ppl ) {
-			if( p.assignedDays.size() == 0 ) {
+			if( p.assignedDays.size() <= 0 ) {
 				System.out.println("=> " + p.getName());
 			}
 		}
@@ -507,7 +509,7 @@ public class Assigner {
 
 	/* UTILITIES USED ELSEWHERE */
 
-	public static String[] commaSeperation( String line ) {
+	public static String[] commaSeparation( String line ) {
 		List<String> words = new ArrayList<>();
 		StringBuilder sb = new StringBuilder();
 
@@ -541,7 +543,7 @@ public class Assigner {
 	}
 
 	public static DayOfWeek[] convertDays( String days ) {
-		return convertDays( commaSeperation( days ) );
+		return convertDays( commaSeparation( days ) );
 	}
 
 	public static DayOfWeek[] convertDays( String[] days ) {
@@ -550,38 +552,39 @@ public class Assigner {
 
 		for( String s : days ) {
 			switch( s.toLowerCase() ){
-			case "monday":
-				result[current] = DayOfWeek.MONDAY;
-				++current;
-				break;
-			case "tuesday":
-				result[current] = DayOfWeek.TUESDAY;
-				++current;
-				break;
-			case "wednesday":
-				result[current] = DayOfWeek.WEDNESDAY;
-				++current;
-				break;
-			case "thursday":
-				result[current] = DayOfWeek.THURSDAY;
-				++current;
-				break;
-			case "friday":
-				result[current] = DayOfWeek.FRIDAY;
-				++current;
-				break;
-			case "saturday":
-				result[current] = DayOfWeek.SATURDAY;
-				++current;
-				break;
-			case "sunday":
-				result[current] = DayOfWeek.SUNDAY;
-				++current;
-				break;
-			default:
-				result[current] = DayOfWeek.FRIDAY;
-				++current;
-				break;
+				case "monday":
+					result[current] = DayOfWeek.MONDAY;
+					++current;
+					break;
+				case "tuesday":
+					result[current] = DayOfWeek.TUESDAY;
+					++current;
+					break;
+				case "wendsday": // Stupid misspelling on my part...
+				case "wednesday":
+					result[current] = DayOfWeek.WEDNESDAY;
+					++current;
+					break;
+				case "thursday":
+					result[current] = DayOfWeek.THURSDAY;
+					++current;
+					break;
+				case "friday":
+					result[current] = DayOfWeek.FRIDAY;
+					++current;
+					break;
+				case "saturday":
+					result[current] = DayOfWeek.SATURDAY;
+					++current;
+					break;
+				case "sunday":
+					result[current] = DayOfWeek.SUNDAY;
+					++current;
+					break;
+				default:
+					result[current] = DayOfWeek.FRIDAY;
+					++current;
+					break;
 			}
 		}
 
