@@ -26,30 +26,30 @@ public class Person {
 	private List<LocalDate> missedDays = new ArrayList<>();
 
 	/* CSV LOADERS */ 
-	@Parsed(field = {"First Name", "What is your first name?"})
+	@Parsed(field = {"First Name", "First Name"})
 	private String firstName;
 
-	@Parsed(field = {"Last Name", "What is your last name?"})
+	@Parsed(field = {"Last Name", "Last Name"})
 	private String lastName;
 
-	@Parsed(field = {"Email", "What is your email?"})
+	@Parsed(field = {"Email", "Email Address"})
 	private String email;
 
-	@Parsed(field = {"Period 3", "What is your third period classroom?"})
+	@Parsed(field = {"Period 3", "Third Period"})
 	private String per3;
 
-	@Parsed(field = {"Period 4", "What is your fourth period classroom?"})
+	@Parsed(field = {"Period 4", "Fourth Period"})
 	private String per4;
 
-	@Parsed(field = {"Days Avalible", "Which of the following days are you available?"})
+	@Parsed(field = {"Days Avalible", "Days Available"})
 	private String avalible;
 
 	@LowerCase
 	@BooleanString(falseStrings = {"no", "n", "null", "false"}, trueStrings = {"yes", "y", "true"})
-	@Parsed(field = "Leadership")
+	@Parsed(field = "In the Leadership team?")
 	private boolean leadership;
 
-	@Parsed(field = {"Notes", "Any other notes?"})
+	@Parsed(field = {"Notes", "Comments"})
 	private String notes;
 
 	// For optimizations
