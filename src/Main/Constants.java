@@ -10,7 +10,7 @@ public final class Constants {
 	public static final String DEFAULT_CSV_NAME = "NAMEHERE";
 	public static final String ASSIGNMENT_CSV = "Assignments.csv";
 	public static final String PREV_ASSIGNMENT_CSV = "Old_Assignments.csv";
-	public static final int ASSIGNMENT_PEOPLE = 3;
+	public static final int ASSIGNMENT_PEOPLE = 4;
 	public static final int BACKUP_PEOPLE = 2;
 	
 	// Value constants
@@ -19,20 +19,27 @@ public final class Constants {
 	public static final double ASSIGNMENT_VALUE = -0.5;
 
 	// YEAR, MONTH, DAY
-	public static final LocalDate DATE_START = LocalDate.of( 2018, Month.AUGUST, 15 );
-	public static final LocalDate DATE_END = LocalDate.of( 2019, Month.JUNE, 3 );
+	public static final LocalDate DATE_START = LocalDate.of( 2019, Month.SEPTEMBER, 25 );
+	public static final LocalDate DATE_END = LocalDate.of( 2019, Month.NOVEMBER, 30 );
 	public static final LocalDate DATE_TODAY = LocalDate.now();
 	
 	// Blacklist of days for rotations
 	public static final DayOfWeek[] DAY_NO_ROTATIONS = { DayOfWeek.SATURDAY, DayOfWeek.SUNDAY };
-	public static final LocalDate[] DATE_NO_ROTATIONS = { LocalDate.of(2018, Month.SEPTEMBER, 3), LocalDate.of(2018, Month.NOVEMBER, 12), 
-			LocalDate.of(2018, Month.NOVEMBER, 21), LocalDate.of(2019, Month.JANUARY, 21), LocalDate.of(2019, Month.MAY, 27) };
-	public static final LocalDate[][] RANGE_NO_ROTATIONS = { {LocalDate.of(2018, Month.OCTOBER, 1), LocalDate.of(2018, Month.OCTOBER, 5)}, 
-			{LocalDate.of(2018, Month.OCTOBER, 22), LocalDate.of(2018, Month.NOVEMBER, 2)}, {LocalDate.of(2018, Month.NOVEMBER, 22), LocalDate.of(2018, Month.NOVEMBER, 23)}, 
-			{LocalDate.of(2018, Month.DECEMBER, 19), LocalDate.of(2018, Month.DECEMBER, 21)}, {LocalDate.of(2018, Month.DECEMBER, 24), LocalDate.of(2019, Month.JANUARY, 7)}, 
-			{LocalDate.of(2019, Month.FEBRUARY, 18), LocalDate.of(2019, Month.FEBRUARY, 22)}, {LocalDate.of(2019, Month.MARCH, 4), LocalDate.of(2019, Month.JANUARY, 15)}, 
-			{LocalDate.of(2019, Month.APRIL, 8), LocalDate.of(2019, Month.APRIL, 12)}, {LocalDate.of(2019, Month.JUNE, 4), LocalDate.of(2019, Month.JUNE, 6)} }; // Inclusive
+	public static final LocalDate[] DATE_NO_ROTATIONS = { 
+		LocalDate.of(2019, Month.SEPTEMBER, 2), 
+		LocalDate.of(2019, Month.NOVEMBER, 11), 
+		LocalDate.of(2019, Month.NOVEMBER, 27), 
+		LocalDate.of(2020, Month.JANUARY, 20), 
+		LocalDate.of(2020, Month.MAY, 25) }; 
+	public static final LocalDate[][] RANGE_NO_ROTATIONS = { 
+		{LocalDate.of(2019, Month.SEPTEMBER, 3), LocalDate.of(2019, Month.OCTOBER, 4)}, 
+		{LocalDate.of(2019, Month.NOVEMBER, 27), LocalDate.of(2019, Month.NOVEMBER, 29)}, 
+		{LocalDate.of(2019, Month.DECEMBER, 18), LocalDate.of(2019, Month.DECEMBER, 20)},
+		{LocalDate.of(2019, Month.DECEMBER, 23), LocalDate.of(2020, Month.JANUARY, 6)}, 
+		{LocalDate.of(2020, Month.FEBRUARY, 17), LocalDate.of(2020, Month.FEBRUARY, 21)}, 
+		{LocalDate.of(2020, Month.APRIL, 13), LocalDate.of(2020, Month.APRIL, 17)}, 
+		{LocalDate.of(2020, Month.JUNE, 2), LocalDate.of(2020, Month.JUNE, 4)} }; // Inclusive
 	
-	public static final String[] DEFAULT_ASSIGNMENT_HEADER = { "Date", "Day Of Week", "Person A", "Person B", "Person C", "Backup A", "Backup B", "Status" };
+	public static final String[] DEFAULT_ASSIGNMENT_HEADER = { "Date", "Day Of Week", "Person A", "Person B", "Person C", "Person D", "Backup A", "Backup B", "Status" };
 
 }

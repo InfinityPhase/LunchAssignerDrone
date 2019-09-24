@@ -28,6 +28,9 @@ public class CSVDay {
 	@Parsed(field = "Person C", defaultNullRead = "")
 	private String personC;
 
+	@Parsed(field = "Person D", defaultNullRead = "")
+	private String personD;
+
 	@Parsed(field = "Backup A", defaultNullRead = "")
 	private String backupA;
 
