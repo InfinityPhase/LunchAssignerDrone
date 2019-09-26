@@ -210,7 +210,7 @@ public class Assigner {
 		}
 		assignmentWriter.commitRecords(); // Writes to file
 		
-		printPeople( people );
+//		printPeople( people );
 //		printAssignments( days );
 //		printAssignmentRange( people );
 //		printSmallestAssignmentRange( people );
