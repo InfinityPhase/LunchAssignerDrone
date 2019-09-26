@@ -19,7 +19,7 @@ public final class Constants {
 	public static final double ASSIGNMENT_VALUE = -0.5;
 
 	// YEAR, MONTH, DAY
-	public static final LocalDate DATE_START = LocalDate.of( 2019, Month.SEPTEMBER, 25 );
+	public static final LocalDate DATE_START = LocalDate.of( 2019, Month.OCTOBER, 7 );
 	public static final LocalDate DATE_END = LocalDate.of( 2019, Month.NOVEMBER, 30 );
 	public static final LocalDate DATE_TODAY = LocalDate.now();
 	
