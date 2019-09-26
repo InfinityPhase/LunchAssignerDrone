@@ -94,6 +94,8 @@ public class CSVDay {
 			return (status.length() >= 1 ? status.charAt(1) == 'y' : false );
 		} else if( name.compareTo( personC ) == 0 ) {
 			return (status.length() >= 2 ? status.charAt(2) == 'y' : false );
+		} else if( name.compareTo( personD ) == 0 ) {
+			return (status.length() >= 2 ? status.charAt(2) == 'y' : false );
 		} else if( name.compareTo( backupA ) == 0 ) {
 			return (status.length() >= 3 ? status.charAt(3) == 'y' : false );
 		} else if( name.compareTo( backupB ) == 0 ) {
@@ -132,6 +134,11 @@ public class CSVDay {
 			assignments.add( tmp );
 		}
 		
+		tmp = Assigner.searchPersonList( Assigner.people, this.personD );
+		if( tmp != null ) {
+			assignments.add( tmp );
+		}
+
 		tmp = Assigner.searchPersonList( Assigner.people, this.backupA );
 		if( tmp != null ) {
 			backups.add( tmp );
@@ -176,6 +183,10 @@ public class CSVDay {
 	}
 
 	public String getPersonC() {
+		return personC;
+	}
+
+	public String getPersonD() {
 		return personC;
 	}
 

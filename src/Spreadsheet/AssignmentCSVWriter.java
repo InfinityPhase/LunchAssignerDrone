@@ -64,7 +64,8 @@ public class AssignmentCSVWriter {
 			
 //			List<String[]> lines = new ArrayList<>();
 			for( Day d : assignments ) {
-				String[] line = new String[9];
+				int totalColumns = Constants.ASSIGNMENT_PEOPLE + Constants.BACKUP_PEOPLE + 3;
+				String[] line = new String[totalColumns];
 				line[0] = d.getDate().toString();
 				line[1] = d.getDate().getDayOfWeek().toString();
 				
